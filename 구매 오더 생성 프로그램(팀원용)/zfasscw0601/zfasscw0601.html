@@ -1,0 +1,34 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<html>
+<head>
+<title>ZFASSCW0601</title>
+</head>
+<body bgcolor="#FFFFE0">
+<font size="3" face = "Arial" color="#000000"><b>Code listing for function: ZFASSCW0601</b></font>
+<br>
+<font size="3" face = "Arial" color="#000000"><b>Description:  [ASS] ####, ## ##</b></font>
+<hr>
+<pre width="100">
+FUNCTION ZFASSCW0601.
+<font color ="#0000FF">*"----------------------------------------------------------------------</font>
+<font color ="#0000FF">*"*"Local Interface:</font>
+<font color ="#0000FF">*"  IMPORTING</font>
+<font color ="#0000FF">*"     REFERENCE(IV_FDID) TYPE  ZSASSMM0403-FDID</font>
+<font color ="#0000FF">*"  EXPORTING</font>
+<font color ="#0000FF">*"     REFERENCE(ES_FOOD) TYPE  ZSASSCW0601</font>
+<font color ="#0000FF">*"----------------------------------------------------------------------</font>
+
+<font color ="#0000FF">*       <a href ="global-zfasscw0601.html">Global data declarations</a></font>
+  " ### ## ### ####, ### ## ##
+  PERFORM get_food_info USING iv_fdid
+                        CHANGING es_food
+                                 gt_food
+                                 gs_food.
+
+ENDFUNCTION.
+</pre>
+<hr>
+<font size="2" face = "Sans Serif">Extracted by Direct Download Enterprise version 1.3.1 - E.G.Mellodew. 1998-2005 UK. Sap Release 754
+</font>
+</body>
+</html>

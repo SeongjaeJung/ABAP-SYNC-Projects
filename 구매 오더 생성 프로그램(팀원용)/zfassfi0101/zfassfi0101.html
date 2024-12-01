@@ -1,0 +1,158 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<html>
+<head>
+<title>ZFASSFI0101</title>
+</head>
+<body bgcolor="#FFFFE0">
+<font size="3" face = "Arial" color="#000000"><b>Code listing for function: ZFASSFI0101</b></font>
+<br>
+<font size="3" face = "Arial" color="#000000"><b>Description:  [ASS] ## ## ###</b></font>
+<hr>
+<pre width="100">
+FUNCTION zfassfi0101.
+<font color ="#0000FF">*"----------------------------------------------------------------------</font>
+<font color ="#0000FF">*"*"Local Interface:</font>
+<font color ="#0000FF">*"  IMPORTING</font>
+<font color ="#0000FF">*"     REFERENCE(IV_EMPID) TYPE  ZEASS_EMPID OPTIONAL</font>
+<font color ="#0000FF">*"     REFERENCE(IV_CODOC) TYPE  ZEASS_CODOC OPTIONAL</font>
+<font color ="#0000FF">*"     REFERENCE(IV_APPTY) TYPE  ZEASS_APPTY OPTIONAL</font>
+<font color ="#0000FF">*"     REFERENCE(IV_APPNO) TYPE  ZEASS_APPNO OPTIONAL</font>
+<font color ="#0000FF">*"  EXPORTING</font>
+<font color ="#0000FF">*"     REFERENCE(EV_APPNO) TYPE  ZEASS_APPNO</font>
+<font color ="#0000FF">*"----------------------------------------------------------------------</font>
+
+<font color ="#0000FF">*       <a href ="global-zfassfi0101.html">Global data declarations</a></font>
+  DATA: lv_number  TYPE n LENGTH 8,
+        lv_pre     TYPE n LENGTH 4,
+        lv_appno   TYPE zeass_appno,
+        ls_apph    TYPE ztassfi0201,
+        ls_appline TYPE ztassfi0203,
+        lt_appline TYPE TABLE OF ztassfi0203,
+        ls_appi    TYPE ztassfi0202,
+        lv_appsta  TYPE zeass_appsta.
+
+  IF iv_appno IS INITIAL.
+
+
+    lv_pre = sy-datum+0(4).
+    CALL FUNCTION 'NUMBER_GET_NEXT'
+      EXPORTING
+        nr_range_nr             = '01'
+        object                  = 'ZASS_APPNO'
+<font color ="#0000FF">*       QUANTITY                = '1'</font>
+<font color ="#0000FF">*       SUBOBJECT               = ' '</font>
+<font color ="#0000FF">*       toyear                  = '2024'</font>
+<font color ="#0000FF">*       IGNORE_BUFFER           = ' '</font>
+      IMPORTING
+        number                  = lv_number
+<font color ="#0000FF">*       QUANTITY                =</font>
+<font color ="#0000FF">*       RETURNCODE              =</font>
+      EXCEPTIONS
+        interval_not_found      = 1
+        number_range_not_intern = 2
+        object_not_found        = 3
+        quantity_is_0           = 4
+        quantity_is_not_1       = 5
+        interval_overflow       = 6
+        buffer_overflow         = 7
+        OTHERS                  = 8.
+    IF sy-subrc &lt;&gt; 0.
+<font color ="#0000FF">* Implement suitable error handling here</font>
+    ENDIF.
+<font color ="#0000FF">*  WRITE: lv_pre.</font>
+    CONCATENATE lv_pre lv_number INTO lv_appno.
+
+
+
+    SELECT SINGLE appty appor appem adead
+            FROM ztassfi0203
+        INTO CORRESPONDING FIELDS OF ls_appline
+      WHERE appty = iv_appty. " ## ##
+
+
+    " ## Header
+    ls_apph-appno = lv_appno.
+    ls_apph-rdate = sy-datum.
+    ls_apph-rpsn = iv_empid. " ### ### ID
+    ls_apph-codoc = iv_codoc. " ### PK
+    ls_apph-adead = ls_appline-adead.
+    ls_apph-appsta = 'A'.
+    ls_apph-appty = iv_appty.
+    ls_apph-rtime = sy-uzeit.
+
+    INSERT ztassfi0201 FROM ls_apph.
+    IF sy-subrc &lt;&gt; 0.
+      MESSAGE a019(zmcassfi20).
+      ROLLBACK WORK.
+    ENDIF.
+
+    SELECT appty appor appem
+      FROM ztassfi0203
+      INTO CORRESPONDING FIELDS OF TABLE lt_appline
+      WHERE appty = iv_appty.
+
+    LOOP AT lt_appline INTO ls_appline.
+      ls_appi-appno = lv_appno.
+      ls_appi-anum = ls_appline-appor.
+      ls_appi-apsn = ls_appline-appem.
+      ls_appi-appsta = 'A'.
+      INSERT ztassfi0202 FROM ls_appi.
+      IF sy-subrc &lt;&gt; 0.
+        MESSAGE a020(zmcassfi20).
+        ROLLBACK WORK.
+      ENDIF.
+      CLEAR: ls_appline, ls_appi.
+    ENDLOOP.
+    ev_appno = lv_appno.
+
+  ELSEIF iv_appno IS NOT INITIAL.
+
+    SELECT SINGLE appsta
+      FROM ztassfi0201
+      INTO lv_appsta
+      WHERE appno = iv_appno.
+
+    IF lv_appsta &lt;&gt; 'C'.
+      MESSAGE a019(zmcassfi20).
+    ENDIF.
+
+
+    UPDATE ztassfi0201 SET appsta = 'A'
+                           rdate = sy-datum
+                           rtime = sy-uzeit
+                      WHERE appno = iv_appno.
+    IF sy-subrc &lt;&gt; 0.
+      MESSAGE a019(zmcassfi20).
+      ROLLBACK WORK.
+    ENDIF.
+    UPDATE ztassfi0202 SET appsta = 'A'
+                     WHERE appno = iv_appno.
+    IF sy-subrc &lt;&gt; 0.
+      MESSAGE a020(zmcassfi20).
+      ROLLBACK WORK.
+    ENDIF.
+
+    ev_appno = iv_appno.
+
+  ENDIF.
+
+  COMMIT WORK.
+
+
+ENDFUNCTION.
+
+
+<font color ="#0000FF">*Messages</font>
+<font color ="#0000FF">*----------------------------------------------------------</font>
+<font color ="#0000FF">*</font>
+<font color ="#0000FF">* Message class: ZMCASSFI20</font>
+<font color ="#0000FF">*019   ## Header ##</font>
+<font color ="#0000FF">*020   ## Item ##</font>
+<font color ="#0000FF">*025   ## ## ##.</font>
+<font color ="#0000FF">*026   ## #### ### ### #####!</font>
+</pre>
+<hr>
+<font size="2" face = "Sans Serif">Extracted by Direct Download Enterprise version 1.3.1 - E.G.Mellodew. 1998-2005 UK. Sap Release 754
+</font>
+</body>
+</html>

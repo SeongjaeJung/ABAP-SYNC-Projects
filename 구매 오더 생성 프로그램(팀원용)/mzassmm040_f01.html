@@ -1,0 +1,2727 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<html>
+<head>
+<title>MZASSMM040_F01</title>
+</head>
+<body bgcolor="#FFFFE0">
+<font size="3" face = "Arial" color="#000000"><b>Code listing for: MZASSMM040_F01</b></font>
+<br>
+<font size="3" face = "Arial" color="#000000"><b>Description:  Include MZASSMM040_F01</b></font>
+<hr>
+<pre width="100">
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& Form set_alv</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& text</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*&      --&gt; GO_CON</font>
+<font color ="#0000FF">*&      --&gt; P_</font>
+<font color ="#0000FF">*&      --&gt; GO_ALV</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+FORM set_alv  USING    po_con TYPE REF TO cl_gui_custom_container
+                       pv_con
+                       po_alv TYPE REF TO cl_gui_alv_grid.
+  CREATE OBJECT po_con
+    EXPORTING
+      container_name              = pv_con
+    EXCEPTIONS
+      cntl_error                  = 1
+      cntl_system_error           = 2
+      create_error                = 3
+      lifetime_error              = 4
+      lifetime_dynpro_dynpro_link = 5
+      OTHERS                      = 6.
+  IF sy-subrc &lt;&gt; 0.
+    MESSAGE a000(zmcassmm04).      "Container ## ##
+    ROLLBACK WORK.
+  ENDIF.
+
+  CREATE OBJECT po_alv
+    EXPORTING
+      i_parent          = po_con
+    EXCEPTIONS
+      error_cntl_create = 1
+      error_cntl_init   = 2
+      error_cntl_link   = 3
+      error_dp_create   = 4
+      OTHERS            = 5.
+  IF sy-subrc &lt;&gt; 0.
+    MESSAGE a001(zmcassmm04).       "ALV ## ##
+    ROLLBACK WORK.
+  ENDIF.
+ENDFORM.
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& Form display_alv_01</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& text</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& --&gt;  p1        text</font>
+<font color ="#0000FF">*& &lt;--  p2        text</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+FORM display_alv_01 .
+  PERFORM set_layout_01.
+  PERFORM set_fieldcatalog_01.
+  PERFORM set_sort_01.
+  CALL METHOD go_alv-&gt;set_table_for_first_display
+    EXPORTING
+<font color ="#0000FF">*     i_buffer_active               =</font>
+<font color ="#0000FF">*     i_bypassing_buffer            =</font>
+<font color ="#0000FF">*     i_consistency_check           =</font>
+      i_structure_name              = 'ZSASSMM0402'
+<font color ="#0000FF">*     is_variant                    =</font>
+<font color ="#0000FF">*     i_save                        =</font>
+<font color ="#0000FF">*     i_default                     = 'X'</font>
+      is_layout                     = gs_layo
+<font color ="#0000FF">*     is_print                      =</font>
+<font color ="#0000FF">*     it_special_groups             =</font>
+<font color ="#0000FF">*     it_toolbar_excluding          =</font>
+<font color ="#0000FF">*     it_hyperlink                  =</font>
+<font color ="#0000FF">*     it_alv_graphics               =</font>
+<font color ="#0000FF">*     it_except_qinfo               =</font>
+<font color ="#0000FF">*     ir_salv_adapter               =</font>
+    CHANGING
+      it_outtab                     = gt_list
+      it_fieldcatalog               = gt_fcat
+      it_sort                       = gt_sort
+<font color ="#0000FF">*     it_filter                     =</font>
+    EXCEPTIONS
+      invalid_parameter_combination = 1
+      program_error                 = 2
+      too_many_lines                = 3
+      OTHERS                        = 4.
+  IF sy-subrc &lt;&gt; 0.
+    MESSAGE a002(zmcassmm04).   "ALV ## ##
+    ROLLBACK WORK.
+  ENDIF.
+
+ENDFORM.
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& Form display_alv_02</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& text</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& --&gt;  p1        text</font>
+<font color ="#0000FF">*& &lt;--  p2        text</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+FORM display_alv_02 .
+  PERFORM set_layout_02.
+  PERFORM set_fieldcatalog_02.
+  PERFORM set_sort_02.
+  " #### # ##
+  IF sy-dynnr = 0100.
+    PERFORM seq_screen_0100 CHANGING gt_list2 gs_list2.
+  ENDIF.
+  CALL METHOD go_alv2-&gt;set_table_for_first_display
+    EXPORTING
+<font color ="#0000FF">*     i_buffer_active               =</font>
+<font color ="#0000FF">*     i_bypassing_buffer            =</font>
+<font color ="#0000FF">*     i_consistency_check           =</font>
+      i_structure_name              = 'ZSASSMM0403'
+<font color ="#0000FF">*     is_variant                    =</font>
+<font color ="#0000FF">*     i_save                        =</font>
+<font color ="#0000FF">*     i_default                     = 'X'</font>
+      is_layout                     = gs_layo2
+<font color ="#0000FF">*     is_print                      =</font>
+<font color ="#0000FF">*     it_special_groups             =</font>
+<font color ="#0000FF">*     it_toolbar_excluding          =</font>
+<font color ="#0000FF">*     it_hyperlink                  =</font>
+<font color ="#0000FF">*     it_alv_graphics               =</font>
+<font color ="#0000FF">*     it_except_qinfo               =</font>
+<font color ="#0000FF">*     ir_salv_adapter               =</font>
+    CHANGING
+      it_outtab                     = gt_list2
+      it_fieldcatalog               = gt_fcat2
+      it_sort                       = gt_sort2
+<font color ="#0000FF">*     it_filter                     =</font>
+    EXCEPTIONS
+      invalid_parameter_combination = 1
+      program_error                 = 2
+      too_many_lines                = 3
+      OTHERS                        = 4.
+  IF sy-subrc &lt;&gt; 0.
+    MESSAGE a002(zmcassmm04).      "ALV ## ##
+    ROLLBACK WORK.
+  ENDIF.
+ENDFORM.
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& Form set_layout_01</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& text</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& --&gt;  p1        text</font>
+<font color ="#0000FF">*& &lt;--  p2        text</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+FORM set_layout_01 .
+  IF gs_layo IS INITIAL.
+    gs_layo-cwidth_opt = 'X'.
+    gs_layo-zebra = 'X'.
+    gs_layo-sel_mode = 'A'.
+<font color ="#0000FF">*    gs_layo-no_merging = 'X'.</font>
+    gs_layo-excp_fname = 'LIGHT'.
+    gs_layo-excp_led = 'X'.
+  ENDIF.
+ENDFORM.
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& Form set_fieldcatalog_01</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& text</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& --&gt;  p1        text</font>
+<font color ="#0000FF">*& &lt;--  p2        text</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+FORM set_fieldcatalog_01 .
+  CLEAR: gt_fcat, gs_fcat.
+  gs_fcat-fieldname = 'LTEXT'.
+  gs_fcat-coltext = '####'.
+  gs_fcat-just = 'C'.
+  gs_fcat-style = cl_gui_alv_grid=&gt;mc_style_button.
+  APPEND gs_fcat TO gt_fcat.
+  CLEAR gs_fcat.
+
+  gs_fcat-fieldname = 'LIGHT'.
+  gs_fcat-coltext = '####'.
+  APPEND gs_fcat TO gt_fcat.
+  CLEAR gs_fcat.
+
+  gs_fcat-fieldname = 'WAERS'.
+  gs_fcat-coltext = TEXT-c01.
+  APPEND gs_fcat TO gt_fcat.
+  CLEAR gs_fcat.
+
+  gs_fcat-fieldname = 'SNAME'.
+  gs_fcat-coltext = TEXT-c02.
+  APPEND gs_fcat TO gt_fcat.
+  CLEAR gs_fcat.
+
+  gs_fcat-fieldname = 'CANCT'.
+  gs_fcat-no_out = 'X'.
+  APPEND gs_fcat TO gt_fcat.
+  CLEAR gs_fcat.
+
+  gs_fcat-fieldname = 'RSTAT'.
+  gs_fcat-no_out = 'X'.
+  APPEND gs_fcat TO gt_fcat.
+  CLEAR gs_fcat.
+
+  gs_fcat-fieldname = 'RSTATT'.
+  gs_fcat-coltext = '####'.
+  gs_fcat-no_out = 'X'.
+  APPEND gs_fcat TO gt_fcat.
+  CLEAR gs_fcat.
+
+  gs_fcat-fieldname = 'BPID'.
+  gs_fcat-no_out = 'X'.
+  APPEND gs_fcat TO gt_fcat.
+  CLEAR gs_fcat.
+
+  gs_fcat-fieldname = 'BPNAME'.
+  gs_fcat-no_out = 'X'.
+  APPEND gs_fcat TO gt_fcat.
+  CLEAR gs_fcat.
+
+  gs_fcat-fieldname = 'PICID'.
+  gs_fcat-no_out = 'X'.
+  APPEND gs_fcat TO gt_fcat.
+  CLEAR gs_fcat.
+
+  gs_fcat-fieldname = 'APPSTA'.
+  gs_fcat-no_out = 'X'.
+  APPEND gs_fcat TO gt_fcat.
+  CLEAR gs_fcat.
+
+  gs_fcat-fieldname = 'APPSTAT'.
+  gs_fcat-coltext = '####'.
+  APPEND gs_fcat TO gt_fcat.
+  CLEAR gs_fcat.
+
+<font color ="#0000FF">*  gs_fcat-fieldname = 'BPNAME'.</font>
+<font color ="#0000FF">*  APPEND gs_fcat TO gt_fcat.</font>
+<font color ="#0000FF">*  CLEAR gs_fcat.</font>
+<font color ="#0000FF">*</font>
+  gs_fcat-fieldname = 'APPNO'.
+  gs_fcat-no_out = 'X'.
+  APPEND gs_fcat TO gt_fcat.
+  CLEAR gs_fcat.
+<font color ="#0000FF">*</font>
+<font color ="#0000FF">*  gs_fcat-fieldname = 'HTEXT'.</font>
+<font color ="#0000FF">*  APPEND gs_fcat TO gt_fcat.</font>
+<font color ="#0000FF">*  CLEAR gs_fcat.</font>
+<font color ="#0000FF">*</font>
+<font color ="#0000FF">*  gs_fcat-fieldname = 'OPSUM'.</font>
+<font color ="#0000FF">*  APPEND gs_fcat TO gt_fcat.</font>
+<font color ="#0000FF">*  CLEAR gs_fcat.</font>
+<font color ="#0000FF">*</font>
+<font color ="#0000FF">*  gs_fcat-fieldname = 'ORDAT'.</font>
+<font color ="#0000FF">*  APPEND gs_fcat TO gt_fcat.</font>
+<font color ="#0000FF">*  CLEAR gs_fcat.</font>
+<font color ="#0000FF">*</font>
+  gs_fcat-fieldname = 'CHDAT'.
+  gs_fcat-no_out = 'X'.
+  APPEND gs_fcat TO gt_fcat.
+  CLEAR gs_fcat.
+
+  IF zsassmm0401-canc = 'X'.
+    gs_fcat-fieldname = 'CANC'.
+    gs_fcat-no_out = 'X'.
+    APPEND gs_fcat TO gt_fcat.
+    CLEAR gs_fcat.
+
+    gs_fcat-fieldname = 'CDAT'.
+    gs_fcat-no_out = 'X'.
+    APPEND gs_fcat TO gt_fcat.
+    CLEAR gs_fcat.
+  ENDIF.
+ENDFORM.
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& Form set_sort_01</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& text</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& --&gt;  p1        text</font>
+<font color ="#0000FF">*& &lt;--  p2        text</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+FORM set_sort_01 .
+  CLEAR: gt_sort, gs_sort.
+  gs_sort-spos = '1'.
+  gs_sort-fieldname = 'ORDAT'.
+  gs_sort-down = 'X'.
+  APPEND gs_sort TO gt_sort.
+  CLEAR gs_sort.
+
+<font color ="#0000FF">*  gs_sort-spos = '2'.</font>
+<font color ="#0000FF">*  gs_sort-fieldname = 'LIGHT'.</font>
+<font color ="#0000FF">*  gs_sort-up = 'X'.</font>
+<font color ="#0000FF">*  APPEND gs_sort TO gt_sort.</font>
+<font color ="#0000FF">*  CLEAR gs_sort.</font>
+
+<font color ="#0000FF">*  gs_sort-spos = '1'.</font>
+<font color ="#0000FF">*  gs_sort-fieldname = 'APPSTAT'.</font>
+<font color ="#0000FF">*  gs_sort-up = 'X'.</font>
+<font color ="#0000FF">*  APPEND gs_sort TO gt_sort.</font>
+<font color ="#0000FF">*  CLEAR gs_sort.</font>
+
+  gs_sort-spos = '2'.
+  gs_sort-fieldname = 'OPSUM'.
+  gs_sort-down = 'X'.
+  APPEND gs_sort TO gt_sort.
+  CLEAR gs_sort.
+ENDFORM.
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& Form set_layout_02</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& text</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& --&gt;  p1        text</font>
+<font color ="#0000FF">*& &lt;--  p2        text</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+FORM set_layout_02 .
+  IF gs_layo2 IS INITIAL.
+    gs_layo2-cwidth_opt = 'X'.
+    gs_layo2-zebra = 'X'.
+    gs_layo2-no_merging = 'X'.
+    gs_layo2-sel_mode = 'A'.
+  ENDIF.
+ENDFORM.
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& Form set_fieldcatalog_02</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& text</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& --&gt;  p1        text</font>
+<font color ="#0000FF">*& &lt;--  p2        text</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+FORM set_fieldcatalog_02 .
+  CLEAR: gt_fcat2, gs_fcat2.
+  gs_fcat2-fieldname = 'WAERS'.
+  gs_fcat2-coltext = TEXT-c01.
+  APPEND gs_fcat2 TO gt_fcat2.
+  CLEAR gs_fcat2.
+
+  gs_fcat2-fieldname = 'WUNIT'.
+  gs_fcat2-coltext = TEXT-c03.
+  APPEND gs_fcat2 TO gt_fcat2.
+  CLEAR gs_fcat2.
+
+  gs_fcat2-fieldname = 'ORDID'.
+  gs_fcat2-no_out = 'X'.
+  APPEND gs_fcat2 TO gt_fcat2.
+  CLEAR gs_fcat2.
+
+<font color ="#0000FF">*  gs_fcat2-fieldname = 'FDID'.</font>
+<font color ="#0000FF">*  gs_fcat2-no_out = 'X'.</font>
+<font color ="#0000FF">*  APPEND gs_fcat2 TO gt_fcat2.</font>
+<font color ="#0000FF">*  CLEAR gs_fcat2.</font>
+
+  gs_fcat2-fieldname = 'LOCID'.
+  gs_fcat2-no_out = 'X'.
+  APPEND gs_fcat2 TO gt_fcat2.
+  CLEAR gs_fcat2.
+
+  gs_fcat2-fieldname = 'PNTID'.
+  gs_fcat2-no_out = 'X'.
+  APPEND gs_fcat2 TO gt_fcat2.
+  CLEAR gs_fcat2.
+
+  gs_fcat2-fieldname = 'PLANO'.
+  gs_fcat2-lzero = 'X'.
+  APPEND gs_fcat2 TO gt_fcat2.
+  CLEAR gs_fcat2.
+
+  IF sy-dynnr = '0100' OR sy-dynnr = '0500'.
+    gs_fcat2-fieldname = 'ORDNO'.
+    gs_fcat2-no_out = 'X'.
+    APPEND gs_fcat2 TO gt_fcat2.
+    CLEAR gs_fcat2.
+
+    gs_fcat2-fieldname = 'CANC'.
+    gs_fcat2-no_out = 'X'.
+    APPEND gs_fcat2 TO gt_fcat2.
+    CLEAR gs_fcat2.
+
+    gs_fcat2-fieldname = 'ORDNO2'.
+    gs_fcat2-lzero = 'X'.
+    APPEND gs_fcat2 TO gt_fcat2.
+    CLEAR gs_fcat2.
+  ELSE.
+    gs_fcat2-fieldname = 'ORDNO'.
+    gs_fcat2-lzero = 'X'.
+    APPEND gs_fcat2 TO gt_fcat2.
+    CLEAR gs_fcat2.
+
+    gs_fcat2-fieldname = 'ORDNO2'.
+    gs_fcat2-no_out = 'X'.
+    APPEND gs_fcat2 TO gt_fcat2.
+    CLEAR gs_fcat2.
+  ENDIF.
+
+ENDFORM.
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& Form set_sort_02</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& text</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& --&gt;  p1        text</font>
+<font color ="#0000FF">*& &lt;--  p2        text</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+FORM set_sort_02 .
+  CLEAR: gt_sort2, gs_sort.
+  IF sy-dynnr = '0100'.
+    gs_sort2-spos = 1.
+    gs_sort2-fieldname = 'ORDNO2'.
+    gs_sort2-up = 'X'.
+  ELSE.
+    gs_sort2-spos = 1.
+    gs_sort2-fieldname = 'ORDNO'.
+    gs_sort2-up = 'X'.
+  ENDIF.
+  APPEND gs_sort2 TO gt_sort2.
+  CLEAR gs_sort2.
+ENDFORM.
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& Form set_default_data</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& text</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*&      &lt;-- ZSASSMM0401</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+FORM set_default_data  CHANGING ps_con TYPE zsassmm0401.
+  DATA: lv_bdate TYPE d,
+        lv_edate TYPE d.
+  CLEAR ps_con.
+  PERFORM get_end_date USING sy-datum
+                       CHANGING lv_edate.
+  CONCATENATE sy-datum(6) '01' INTO lv_bdate.
+<font color ="#0000FF">*  ps_con-bdate = '20241101'.</font>
+  ps_con-bdate = lv_bdate.
+  ps_con-edate = lv_edate.
+  ps_con-canc = 'X'.
+  ps_con-bpid = 'V0001'.
+ENDFORM.
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& Form get_end_date</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& text</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*&      --&gt; SY_DATUM</font>
+<font color ="#0000FF">*&      &lt;-- LV_EDATE</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+FORM get_end_date  USING    pv_datum
+                   CHANGING pv_edate.
+  CLEAR pv_edate.
+  CALL FUNCTION 'RP_LAST_DAY_OF_MONTHS'
+    EXPORTING
+      day_in            = pv_datum
+    IMPORTING
+      last_day_of_month = pv_edate
+    EXCEPTIONS
+      day_in_no_date    = 1
+      OTHERS            = 2.
+  IF sy-subrc &lt;&gt; 0.
+<font color ="#0000FF">* Implement suitable error handling here</font>
+  ENDIF.
+ENDFORM.
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& Form get_alv_info_01</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& text</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*&      --&gt; GS_CON</font>
+<font color ="#0000FF">*&      &lt;-- GS_LIST</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+FORM get_alv_info_01  USING    VALUE(ps_con) TYPE zsassmm0401
+                      CHANGING pt_list TYPE zsassmm0402_t
+                               ps_list TYPE zsassmm0402
+                               pt_domain TYPE dd07v_t
+                               ps_domain TYPE dd07v.
+  "## ## Range
+  PERFORM get_condition_range CHANGING ps_con
+                                       gt_ord
+                                       gt_bpd.
+  "## ## ALV ## ##
+  PERFORM get_main_info_alv_01 USING ps_con
+                               CHANGING pt_list.
+  "####, ####, ## ##, ## ## ##
+  PERFORM get_name_info CHANGING pt_list
+                                 ps_list
+                                 pt_domain
+                                 ps_domain.
+ENDFORM.
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& Form get_main_info_alv_01</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& text</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*&      --&gt; PS_CON</font>
+<font color ="#0000FF">*&      &lt;-- PS_LIST</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+FORM get_main_info_alv_01  USING    VALUE(ps_con) TYPE zsassmm0401
+                           CHANGING pt_list TYPE zsassmm0402_t.
+  IF ps_con-canc = 'X'.
+    SELECT ordid bpid picid ordat opsum waers
+           htext rstat chdat canc cdat
+      FROM ztassmm0201
+      INTO CORRESPONDING FIELDS OF TABLE pt_list
+     WHERE bpid IN gt_bpd
+      AND ordat IN gt_ord
+      AND canc &lt;&gt; 'X'.
+  ELSEIF ps_con-canc2 = 'X'.
+    SELECT ordid bpid picid ordat opsum waers
+           htext rstat chdat canc cdat
+      FROM ztassmm0201
+      INTO CORRESPONDING FIELDS OF TABLE pt_list
+     WHERE bpid IN gt_bpd
+      AND ordat IN gt_ord
+      AND canc = 'X'.
+  ELSEIF ps_con-canc3 = 'X'.
+    SELECT ordid bpid picid ordat opsum waers
+           htext rstat chdat canc cdat
+      FROM ztassmm0201
+      INTO CORRESPONDING FIELDS OF TABLE pt_list
+     WHERE bpid IN gt_bpd
+      AND ordat IN gt_ord.
+  ENDIF.
+
+  DELETE pt_list WHERE rstat = 'A' AND picid &lt;&gt; sy-uname.
+ENDFORM.
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& Form get_condition_range</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& text</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*&      &lt;-- PS_CON</font>
+<font color ="#0000FF">*&      &lt;-- GT_ORD</font>
+<font color ="#0000FF">*&      &lt;-- GT_BPD</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+FORM get_condition_range  CHANGING ps_con TYPE zsassmm0401
+                                   pt_ord LIKE gt_ord
+                                   pt_bpd LIKE gt_bpd.
+  DATA: ls_ord LIKE LINE OF pt_ord,
+        ls_bpd LIKE LINE OF pt_bpd.
+  CLEAR: gt_ord, gt_bpd.
+
+  IF ps_con-bpid IS NOT INITIAL.
+    ls_bpd-sign = 'I'.
+    ls_bpd-option = 'EQ'.
+    ls_bpd-low = ps_con-bpid.
+    APPEND ls_bpd TO gt_bpd.
+  ENDIF.
+
+  IF ps_con-bdate IS NOT INITIAL AND ps_con-edate IS NOT INITIAL.
+    ls_ord-sign = 'I'.
+    ls_ord-option = 'BT'.
+    ls_ord-low = ps_con-bdate.
+    ls_ord-high = ps_con-edate.
+    APPEND ls_ord TO gt_ord.
+    RETURN.                               " ## ### ####
+  ENDIF.
+
+  IF ps_con-bdate IS INITIAL.             "edate# ## ##
+    ls_ord-sign = 'I'.
+    ls_ord-option = 'EQ'.
+    ls_ord-low = ps_con-edate.
+  ENDIF.
+
+  IF ps_con-edate IS INITIAL.             "bdate# ## ##
+    ls_ord-sign = 'I'.
+    ls_ord-option = 'EQ'.
+    ls_ord-low = ps_con-bdate.
+  ENDIF.
+ENDFORM.
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& Form get_name_info</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& text</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*&      &lt;-- PT_LIST</font>
+<font color ="#0000FF">*&      &lt;-- PS_LIST</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+FORM get_name_info  CHANGING pt_list TYPE zsassmm0402_t
+                             ps_list TYPE zsassmm0402
+                             pt_domain TYPE dd07v_t
+                             ps_domain TYPE dd07v.
+  CLEAR ps_list.
+  PERFORM get_fixed_value USING 'ZDASS_RSTAT'
+                          CHANGING pt_domain.
+  PERFORM get_fixed_value USING 'ZDASS_APPSTA'
+                          CHANGING pt_domain.
+<font color ="#0000FF">*  LOOP AT pt_list INTO ps_list.</font>
+  LOOP AT pt_list ASSIGNING FIELD-SYMBOL(&lt;fs_list01&gt;).
+    "####
+    PERFORM get_emp_name USING &lt;fs_list01&gt;-picid
+                         CHANGING &lt;fs_list01&gt;-sname.
+    "####
+    PERFORM get_vender_name USING &lt;fs_list01&gt;-bpid
+                            CHANGING &lt;fs_list01&gt;-bpname.
+    "####
+    PERFORM get_appno USING &lt;fs_list01&gt;-ordid
+                      CHANGING &lt;fs_list01&gt;-appno
+                               &lt;fs_list01&gt;-appsta.
+    "## ## Text
+    PERFORM get_submit_text USING &lt;fs_list01&gt;-rstat
+                                  pt_domain
+                                  'ZDASS_RSTAT'
+                            CHANGING &lt;fs_list01&gt;-rstatt.
+    "#####
+    PERFORM get_submit_text USING &lt;fs_list01&gt;-appsta
+                                  pt_domain
+                                  'ZDASS_APPSTA'
+                            CHANGING &lt;fs_list01&gt;-appstat.
+    "###
+    PERFORM get_rstat_light USING &lt;fs_list01&gt;-rstat
+                            CHANGING &lt;fs_list01&gt;-light.
+    "####
+    &lt;fs_list01&gt;-ltext = icon_display_text.
+<font color ="#0000FF">*    MODIFY pt_list FROM ps_list.</font>
+  ENDLOOP.
+ENDFORM.
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& Form get_emp_name</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& text</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*&      --&gt; PS_LIST_PICID</font>
+<font color ="#0000FF">*&      &lt;-- PS_LIST_SNAME</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+FORM get_emp_name  USING    VALUE(pv_id)
+                   CHANGING pv_sname.
+<font color ="#0000FF">*  DATA: lv_lname TYPE c LENGTH 20,</font>
+<font color ="#0000FF">*        lv_fname TYPE c LENGTH 20.</font>
+<font color ="#0000FF">*  CLEAR pv_sname.</font>
+<font color ="#0000FF">*  SELECT SINGLE lname fname</font>
+<font color ="#0000FF">*    FROM ztassfi0002</font>
+<font color ="#0000FF">*    INTO (lv_lname, lv_fname)</font>
+<font color ="#0000FF">*   WHERE empid = pv_id.</font>
+<font color ="#0000FF">*</font>
+<font color ="#0000FF">*  CONCATENATE lv_lname lv_fname INTO pv_sname.</font>
+
+  call function <a href ="zfasscw0201/zfasscw0201.html">'ZFASSCW0201'</a>
+    EXPORTING
+      iv_id   = pv_id
+    IMPORTING
+      ev_name = pv_sname.
+
+ENDFORM.
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& Form get_fixed_value</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& text</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*&      --&gt; PV_DOMAIN</font>
+<font color ="#0000FF">*&      &lt;-- PT_DOMAIN</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+FORM get_fixed_value  USING    VALUE(pv_domain) CHANGING pt_domain TYPE dd07v_t.
+  DATA: lt_domain TYPE dd07v_t,
+        ls_domain TYPE dd07v.
+  READ TABLE pt_domain WITH KEY domname = pv_domain TRANSPORTING NO FIELDS.
+  IF sy-subrc &lt;&gt; 0.
+    call function <a href ="zfassmm0404/zfassmm0404.html">'ZFASSMM0404'</a>
+      EXPORTING
+        iv_domain = pv_domain
+      IMPORTING
+        et_domain = lt_domain.
+    LOOP AT lt_domain INTO ls_domain.
+      APPEND ls_domain TO pt_domain.
+    ENDLOOP.
+  ENDIF.
+ENDFORM.
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& Form get_vender_name</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& text</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*&      --&gt; PS_LIST_BPID</font>
+<font color ="#0000FF">*&      &lt;-- PS_LIST_BPNAME</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+FORM get_vender_name  USING    VALUE(pv_id)
+                      CHANGING pv_name.
+<font color ="#0000FF">*  CLEAR pv_name.</font>
+<font color ="#0000FF">*  SELECT SINGLE bpname</font>
+<font color ="#0000FF">*    FROM ztassfi0001_t</font>
+<font color ="#0000FF">*    INTO pv_name</font>
+<font color ="#0000FF">*   WHERE bpid = pv_id.</font>
+
+  call function <a href ="zfasscw0301/zfasscw0301.html">'ZFASSCW0301'</a>
+    EXPORTING
+      iv_id   = pv_id
+    IMPORTING
+      ev_name = pv_name.
+
+
+ENDFORM.
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& Form get_appno</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& text</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*&      --&gt; PS_LIST_ORDID</font>
+<font color ="#0000FF">*&      &lt;-- PS_LIST_APPNO</font>
+<font color ="#0000FF">*&      &lt;-- PS_LIST_RSTAT</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+FORM get_appno  USING    VALUE(pv_ordid)
+                CHANGING pv_appno
+                         pv_appsta.
+<font color ="#0000FF">*  CLEAR: pv_appno.</font>
+<font color ="#0000FF">*  SELECT SINGLE appno</font>
+<font color ="#0000FF">*    FROM ztassfi0201</font>
+<font color ="#0000FF">*    INTO pv_appno</font>
+<font color ="#0000FF">*   WHERE codoc = pv_ordid.</font>
+
+  call function <a href ="zfassmm0402/zfassmm0402.html">'ZFASSMM0402'</a>
+    EXPORTING
+      iv_ordid  = pv_ordid
+    IMPORTING
+      ev_appno  = pv_appno
+      ev_appsta = pv_appsta.
+
+ENDFORM.
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& Form get_alv_info_02</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& text</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*&      --&gt; GT_LIST</font>
+<font color ="#0000FF">*&      &lt;-- GT_LIST2</font>
+<font color ="#0000FF">*&      &lt;-- GS_LIST2</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+FORM get_alv_info_02  USING    VALUE(pt_list) TYPE zsassmm0402_t
+                      CHANGING pt_list2 TYPE zsassmm0403_t
+                               ps_list2 TYPE zsassmm0403
+                               ps_list TYPE zsassmm0402
+                               pt_rows TYPE lvc_t_row
+                               ps_rows TYPE lvc_s_row
+                               pv_subrc pv_subrc2.
+  CLEAR: ps_list2, ps_list, pv_subrc, pt_rows, ps_rows, pt_list2, pv_subrc2.
+  " ALV## ### # ##
+  PERFORM get_selected_rows CHANGING pt_rows pv_subrc.
+  IF pv_subrc = 2.      " 1## ### ##
+    READ TABLE pt_rows INDEX 1 INTO ps_rows.
+    READ TABLE pt_list INDEX ps_rows-index INTO ps_list.
+    ps_list2-ordid = ps_list-ordid.
+  ELSE.
+    RETURN.
+  ENDIF.
+  " ## ## ALV ## ## ##
+  PERFORM get_main_info_alv_02 CHANGING pt_list2
+                                        ps_list2.
+  " ####, ##, #####, ####, ####, ###, ### ##
+  PERFORM get_add_info_alv_02 CHANGING pt_list2
+                                       ps_list2.
+ENDFORM.
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& Form get_selected_rows</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& text</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*&      &lt;-- GT_ROWS</font>
+<font color ="#0000FF">*&      &lt;-- GV_SUBRC</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+FORM get_selected_rows  CHANGING pt_rows TYPE lvc_t_row
+                                 pv_subrc.
+<font color ="#0000FF">*  DATA lv_rows TYPE i.</font>
+<font color ="#0000FF">*  CLEAR: lv_rows, pv_subrc, pt_rows.</font>
+<font color ="#0000FF">*  CALL METHOD go_alv-&gt;get_selected_rows</font>
+<font color ="#0000FF">*    IMPORTING</font>
+<font color ="#0000FF">*      et_index_rows = pt_rows</font>
+<font color ="#0000FF">**     et_row_no     =</font>
+<font color ="#0000FF">*    .</font>
+<font color ="#0000FF">*  DESCRIBE TABLE pt_rows LINES lv_rows.</font>
+<font color ="#0000FF">*  IF lv_rows = 0.</font>
+<font color ="#0000FF">*    pv_subrc = 0.</font>
+<font color ="#0000FF">*  ELSEIF lv_rows = 1.</font>
+<font color ="#0000FF">*    pv_subrc = 2.</font>
+<font color ="#0000FF">*  ELSE.</font>
+<font color ="#0000FF">*    pv_subrc = 4.</font>
+<font color ="#0000FF">*  ENDIF.</font>
+
+  call function <a href ="zfassmm0403/zfassmm0403.html">'ZFASSMM0403'</a>
+    EXPORTING
+      i_alv    = go_alv
+    IMPORTING
+      ev_subrc = pv_subrc
+      et_rows  = pt_rows.
+
+ENDFORM.
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& Form get_main_info_alv_02</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& text</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*&      &lt;-- GT_LIST2</font>
+<font color ="#0000FF">*&      &lt;-- GS_LIST2</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+FORM get_main_info_alv_02  CHANGING pt_list2 TYPE zsassmm0403_t
+                                    ps_list2 TYPE zsassmm0403.
+  SELECT ordid ordno plaid plano fdid wahid oramt orpri tgdat canc
+    FROM ztassmm0202
+    INTO CORRESPONDING FIELDS OF TABLE pt_list2
+   WHERE ordid = ps_list2-ordid.
+
+ENDFORM.
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& Form get_add_info_alv_02</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& text</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*&      &lt;-- PT_LIST2</font>
+<font color ="#0000FF">*&      &lt;-- PS_LIST2</font>
+<font color ="#0000FF">*&      &lt;-- PT_DOMAIN</font>
+<font color ="#0000FF">*&      &lt;-- PS_DOMAIN</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+FORM get_add_info_alv_02  CHANGING pt_list2 TYPE zsassmm0403_t
+                                   ps_list2 TYPE zsassmm0403.
+  CLEAR ps_list2.
+  LOOP AT pt_list2 INTO ps_list2.
+    "##
+    ps_list2-waers = 'KRW'.
+    " ####, ## ##
+    PERFORM get_food_name USING ps_list2-fdid
+                          CHANGING ps_list2-fdname
+                                   ps_list2-wunit.
+    " ### ##
+    PERFORM get_warehouse_name USING ps_list2-wahid
+                               CHANGING ps_list2-wname.
+    " ####, ### ##
+    PERFORM get_plant_info USING ps_list2-wahid
+                           CHANGING ps_list2-pntid
+                                    ps_list2-pname.
+    " #####, #### ##
+    PERFORM get_location_info USING ps_list2-pntid
+                              CHANGING ps_list2-locid
+                                       ps_list2-loname.
+    MODIFY pt_list2 FROM ps_list2.
+  ENDLOOP.
+ENDFORM.
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& Form get_food_name</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& text</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*&      &lt;-- GS_LIST2</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+FORM get_food_name  USING VALUE(pv_fdid) CHANGING pv_fdname pv_wunit.
+  DATA ls_food TYPE zsasscw0601.
+  CLEAR: pv_fdname, pv_wunit.
+
+  call function <a href ="zfasscw0601/zfasscw0601.html">'ZFASSCW0601'</a>
+    EXPORTING
+      iv_fdid = pv_fdid
+    IMPORTING
+      es_food = ls_food.
+  pv_fdname = ls_food-fdname.
+  pv_wunit = ls_food-wunit.
+ENDFORM.
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& Form get_plant_info</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& text</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*&      &lt;-- GS_LIST2</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+FORM get_plant_info  USING VALUE(pv_wahid) CHANGING pv_pntid pv_pname.
+<font color ="#0000FF">*  CLEAR: pv_pntid, pv_pname.</font>
+<font color ="#0000FF">*  SELECT SINGLE a~pntid pname</font>
+<font color ="#0000FF">*    FROM ztassmm0001 AS a INNER JOIN ztassmm0002_t AS b</font>
+<font color ="#0000FF">*      ON a~pntid = b~pntid</font>
+<font color ="#0000FF">*    INTO (pv_pntid, pv_pname)</font>
+<font color ="#0000FF">*   WHERE a~wahid = pv_wahid</font>
+<font color ="#0000FF">*     AND b~spras = sy-langu.</font>
+  call function <a href ="zfasscw0801/zfasscw0801.html">'ZFASSCW0801'</a>
+    EXPORTING
+      iv_wahid = pv_wahid
+    IMPORTING
+      ev_pntid = pv_pntid
+      ev_pname = pv_pname.
+
+ENDFORM.
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& Form get_warehouse_name</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& text</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*&      &lt;-- GS_LIST2</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+FORM get_warehouse_name  USING VALUE(pv_wahid) CHANGING pv_wname.
+  CLEAR pv_wname.
+<font color ="#0000FF">*  SELECT SINGLE wname</font>
+<font color ="#0000FF">*    FROM ztassmm0001_t</font>
+<font color ="#0000FF">*    INTO pv_wname</font>
+<font color ="#0000FF">*   WHERE wahid = pv_wahid</font>
+<font color ="#0000FF">*     AND spras = sy-langu.</font>
+  call function <a href ="zfasscw0701/zfasscw0701.html">'ZFASSCW0701'</a>
+    EXPORTING
+      iv_wahid = pv_wahid
+    IMPORTING
+      ev_wname = pv_wname.
+ENDFORM.
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& Form get_location_info</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& text</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*&      &lt;-- PS_LIST2</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+FORM get_location_info  USING VALUE(pv_pntid) CHANGING pv_locid pv_loname.
+<font color ="#0000FF">*  CLEAR: pv_locid, pv_loname.</font>
+<font color ="#0000FF">*  SELECT SINGLE a~locid b~loname</font>
+<font color ="#0000FF">*    FROM ztassmm0002 AS a INNER JOIN ztassmm0003_t AS b</font>
+<font color ="#0000FF">*      ON a~locid = b~locid</font>
+<font color ="#0000FF">*    INTO (pv_locid, pv_loname)</font>
+<font color ="#0000FF">*   WHERE a~pntid = pv_pntid</font>
+<font color ="#0000FF">*     AND b~spras = sy-langu.</font>
+  call function <a href ="zfasscw0901/zfasscw0901.html">'ZFASSCW0901'</a>
+    EXPORTING
+      iv_pntid  = pv_pntid
+    IMPORTING
+      ev_locid  = pv_locid
+      ev_loname = pv_loname.
+
+ENDFORM.
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& Form search_condition</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& text</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*&      --&gt; GS_CON</font>
+<font color ="#0000FF">*&      &lt;-- GV_SUBRC</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+FORM search_condition  USING    VALUE(ps_con) TYPE zsassmm0401 CHANGING pv_subrc.
+  CLEAR pv_subrc.
+  DATA lv_date TYPE d.
+  IF ps_con IS INITIAL.
+    MESSAGE i019(zmcassmm04).       "### ######
+    pv_subrc = 1.
+    RETURN.
+  ENDIF.
+  lv_date = ps_con-edate - ps_con-bdate.
+  IF ps_con-bdate &gt; ps_con-edate.
+    MESSAGE i018(zmcassmm04).   "### ### ######.
+    pv_subrc = 4.
+    RETURN.
+  ELSEIF lv_date &gt; 61.
+    MESSAGE i003(zmcassmm04).   "## # ## #### ### # ####
+    pv_subrc = 2.
+  ELSEIF ps_con-bdate &gt; sy-datum.
+    MESSAGE i041(zmcassmm04).   "#### ### #### ######.
+    pv_subrc = 6.
+  ENDIF.
+ENDFORM.
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& Form get_food_detail</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& text</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*&      --&gt; GS_LIST2</font>
+<font color ="#0000FF">*&      &lt;-- ZSASSMM0405</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+FORM get_food_detail  USING    VALUE(ps_list2) TYPE zsassmm0403
+                      CHANGING ps_str TYPE zsassmm0405
+                               pt_domain TYPE dd07v_t
+                               ps_domain TYPE dd07v.
+  " ### ## ##
+  PERFORM get_food_detail_main USING ps_list2-fdid
+                               CHANGING ps_str.
+  " ####, ## ##
+  PERFORM get_food_name USING ps_str-fdid
+                        CHANGING ps_str-fdname
+                                 ps_str-wunit.
+  " ## ## ## Fixed Value
+  PERFORM get_fixed_value USING 'ZDASS_FCATG'
+                          CHANGING pt_domain.
+  " ## ## Text
+  PERFORM get_food_category USING ps_str-fcatg
+                                  pt_domain
+                                  'ZDASS_FCATG'
+                            CHANGING ps_str-fcatgt.
+
+  " ### ## ## Fixed Value
+  PERFORM get_fixed_value USING 'ZDASS_STDEL'
+                          CHANGING pt_domain.
+  PERFORM get_food_del USING ps_str-stdel
+                             pt_domain
+                             'ZDASS_STDEL'
+                       CHANGING ps_str-stdelt.
+
+  CALL SCREEN 0120 STARTING AT 10 10.
+ENDFORM.
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& Form get_food_detail_main</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& text</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*&      --&gt; PS_LIST2_FDID</font>
+<font color ="#0000FF">*&      &lt;-- PS_STR</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+FORM get_food_detail_main  USING    VALUE(pv_fdid) CHANGING ps_str.
+  SELECT SINGLE fdid fcatg stway stper calory fpric waers
+                stdel dedat rgdat chdat fdemp
+    FROM ztassmm0301
+    INTO CORRESPONDING FIELDS OF ps_str
+   WHERE fdid = pv_fdid.
+ENDFORM.
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& Form get_location_detail</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& text</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*&      --&gt; GS_LIST2</font>
+<font color ="#0000FF">*&      &lt;-- ZSASSMM0406</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+FORM get_location_detail  USING    VALUE(ps_list2) TYPE zsassmm0403
+                          CHANGING ps_str TYPE zsassmm0406.
+  " ### ## ##
+  PERFORM get_location_detail_main USING ps_list2
+                                   CHANGING ps_str.
+  " ####
+  PERFORM get_emp_name USING ps_str-picid
+                       CHANGING ps_str-ename.
+  CALL SCREEN 0130 STARTING AT 10 10.
+ENDFORM.
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& Form get_location_detail_main</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& text</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*&      --&gt; PS_LIST2</font>
+<font color ="#0000FF">*&      &lt;-- PS_STR</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+FORM get_location_detail_main  USING    VALUE(ps_list2) TYPE zsassmm0403
+                               CHANGING ps_str TYPE zsassmm0406.
+  SELECT SINGLE a~locid a~picid b~loname
+    FROM ztassmm0003 AS a INNER JOIN ztassmm0003_t AS b
+      ON a~locid = b~locid
+    INTO CORRESPONDING FIELDS OF ps_str
+   WHERE a~locid = ps_list2-locid
+     AND b~spras = '3'.
+ENDFORM.
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& Form get_plant_detail</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& text</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*&      --&gt; GS_LIST2</font>
+<font color ="#0000FF">*&      &lt;-- ZSASSMM0407</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+FORM get_plant_detail  USING    VALUE(ps_list2) TYPE zsassmm0403
+                       CHANGING ps_str TYPE zsassmm0407.
+  " ## ## ##
+  PERFORM get_plant_main USING ps_list2
+                         CHANGING ps_str.
+  " ####
+  PERFORM get_location_name CHANGING ps_str.
+  CALL SCREEN 0140 STARTING AT 10 10.
+ENDFORM.
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& Form get_plant_main</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& text</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*&      --&gt; PS_LIST2</font>
+<font color ="#0000FF">*&      &lt;-- PS_STR</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+FORM get_plant_main  USING    VALUE(ps_list2) TYPE zsassmm0403
+                     CHANGING ps_str TYPE zsassmm0407.
+  SELECT SINGLE a~pntid b~pname locid ppnum
+    FROM ztassmm0002 AS a INNER JOIN ztassmm0002_t AS b
+      ON a~pntid = b~pntid
+    INTO CORRESPONDING FIELDS OF ps_str
+   WHERE a~pntid = ps_list2-pntid.
+ENDFORM.
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& Form get_location_name</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& text</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*&      &lt;-- PS_STR</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+FORM get_location_name  CHANGING ps_str TYPE zsassmm0407.
+  SELECT SINGLE loname
+    FROM ztassmm0003_t
+    INTO ps_str-loname
+   WHERE locid = ps_str-locid.
+ENDFORM.
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& Form get_warehouse_detail</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& text</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*&      --&gt; GS_LIST2</font>
+<font color ="#0000FF">*&      &lt;-- ZSASSMM0408</font>
+<font color ="#0000FF">*&      &lt;-- GT_DOMAIN</font>
+<font color ="#0000FF">*&      &lt;-- GS_DOMAIN</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+FORM get_warehouse_detail  USING    VALUE(ps_list2) TYPE zsassmm0403
+                           CHANGING ps_str TYPE zsassmm0408
+                                    pt_domain TYPE dd07v_t
+                                    ps_domain TYPE dd07v.
+  " ## ## ##
+  PERFORM get_warehouse_main USING ps_list2
+                             CHANGING ps_str.
+  " ####, ### ##
+  PERFORM get_plant_info USING ps_str-wahid
+                         CHANGING ps_str-pntid
+                                  ps_str-pname.
+  " #### Fixed Value
+  PERFORM get_fixed_value USING 'ZDASS_STWAY'
+                          CHANGING pt_domain.
+  " ####
+  PERFORM get_stway_text USING ps_str-stway
+                               pt_domain
+                               'ZDASS_STWAY'
+                         CHANGING ps_str-stwayt.
+
+  CALL SCREEN 0150 STARTING AT 10 10.
+ENDFORM.
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& Form get_warehouse_main</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& text</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*&      --&gt; PS_LIST2</font>
+<font color ="#0000FF">*&      &lt;-- PS_STR</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+FORM get_warehouse_main  USING    VALUE(ps_list2) TYPE zsassmm0403
+                         CHANGING ps_str TYPE zsassmm0408.
+  SELECT SINGLE a~wahid wpnum stway wname
+    FROM ztassmm0001 AS a INNER JOIN ztassmm0001_t AS b
+      ON a~wahid = b~wahid
+    INTO CORRESPONDING FIELDS OF ps_str
+   WHERE a~wahid = ps_list2-wahid.
+ENDFORM.
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& Form get_detail_button_info</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& text</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*&      --&gt; GT_LIST</font>
+<font color ="#0000FF">*&      &lt;-- ZSASSMM0404</font>
+<font color ="#0000FF">*&      &lt;-- GS_LIST</font>
+<font color ="#0000FF">*&      &lt;-- GT_ROWS</font>
+<font color ="#0000FF">*&      &lt;-- GS_ROWS</font>
+<font color ="#0000FF">*&      &lt;-- GV_SUBRC</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+FORM get_detail_button_info  USING    VALUE(pt_list) TYPE zsassmm0402_t
+                             CHANGING ps_str TYPE zsassmm0404
+                                      ps_list TYPE zsassmm0402
+                                      pt_rows TYPE lvc_t_row
+                                      ps_rows TYPE lvc_s_row
+                                      pv_subrc
+                                      pt_domain TYPE dd07v_t
+                                      ps_domain TYPE dd07v.
+  CLEAR: ps_str, ps_list, pt_rows, ps_rows, pv_subrc.
+  " ### # ## ##   pv_subrc = 0 : 0 , 2 : 1, 4 : N
+  PERFORM get_selected_rows CHANGING pt_rows
+                                     pv_subrc.
+  IF pv_subrc = 2.    " 1# ##
+    READ TABLE pt_rows INDEX 1 INTO ps_rows.
+    READ TABLE pt_list INDEX ps_rows-index INTO ps_list.
+    " ## ## ## ##
+    PERFORM get_order_header USING ps_list-ordid
+                             CHANGING ps_str.
+
+    IF ps_str-rstat &lt;&gt; 'A'.     "## ## ###
+      PERFORM get_appno USING ps_str-ordid
+                        CHANGING ps_str-appno
+                                 ps_str-appsta.
+    ENDIF.
+
+    " ## ## Text
+    PERFORM get_submit_text USING ps_str-rstat
+                                  pt_domain
+                                  'ZDASS_RSTAT'
+                            CHANGING ps_str-rstatt.
+
+    " ### ##
+    PERFORM get_vendor_info USING ps_str-bpid
+                            CHANGING ps_str.
+
+    "####
+    PERFORM get_vender_name USING ps_str-bpid
+                            CHANGING ps_str-bpname.
+
+    " ### ### Fixed Value
+    PERFORM get_fixed_value USING 'ZDASS_BTYPE'
+                            CHANGING pt_domain.
+
+    " ### ###
+    PERFORM get_btype_text USING ps_str-btype
+                                 pt_domain
+                                 'ZDASS_BTYPE'
+                           CHANGING ps_str-btypet.
+
+    " ### ##
+    PERFORM get_bank_name USING ps_str-bank
+                          CHANGING ps_str-bname.
+
+    " ### ## ##
+    PERFORM get_emp_info USING ps_str-picid
+                         CHANGING ps_str.
+
+    " ####
+    PERFORM get_emp_name USING ps_str-picid
+                         CHANGING ps_str-ename.
+
+    " ### Fixed Value
+    PERFORM get_fixed_value USING 'ZDASS_RANK'
+                            CHANGING pt_domain.
+
+    " ### ##
+    PERFORM get_rank_text USING ps_str-rank
+                                pt_domain
+                                'ZDASS_RANK'
+                          CHANGING ps_str-rankt.
+
+    " ### ##
+    PERFORM get_depart_name USING ps_str-depid
+                            CHANGING ps_str-dname.
+
+    " ## Fixed Value
+    PERFORM get_fixed_value USING 'ZDASS_GENDER'
+                            CHANGING pt_domain.
+
+    " ## Text
+    PERFORM get_gender_text USING ps_str-gender
+                                  pt_domain
+                                  'ZDASS_GENDER'
+                            CHANGING ps_str-gendert.
+
+    " ## ## Fixed Value
+    PERFORM get_fixed_value USING 'ZDASS_CANC'
+                            CHANGING pt_domain.
+
+    " ## ## Text
+    PERFORM get_canc_text USING ps_str-canc
+                                pt_domain
+                                'ZDASS_CANC'
+                           CHANGING ps_str-canct.
+
+    " ## ##
+    PERFORM get_appsta USING ps_str-ordid
+                       CHANGING ps_str-appsta.
+
+    " #### Fixed Value
+    PERFORM get_fixed_value USING 'ZDASS_APPSTA'
+                            CHANGING pt_domain.
+
+    " ## ## Text
+    PERFORM get_canc_text USING ps_str-appsta
+                                pt_domain
+                                'ZDASS_APPSTA'
+                          CHANGING ps_str-appstat.
+  ELSE.
+    RETURN.
+  ENDIF.
+ENDFORM.
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& Form get_order_header</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& text</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*&      --&gt; PS_LIST_ORDID</font>
+<font color ="#0000FF">*&      &lt;-- PS_STR</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+FORM get_order_header  USING    VALUE(pv_ordid)
+                       CHANGING ps_str TYPE zsassmm0404.
+  SELECT SINGLE ordid bpid picid ordat chdat opsum waers htext rstat canc cdat
+    FROM ztassmm0201
+    INTO CORRESPONDING FIELDS OF ps_str
+   WHERE ordid = pv_ordid.
+ENDFORM.
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& Form get_vendor_info</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& text</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*&      --&gt; PS_STR_BPID</font>
+<font color ="#0000FF">*&      &lt;-- PS_STR</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+FORM get_vendor_info  USING    VALUE(pv_bpid)
+                      CHANGING ps_str TYPE zsassmm0404.
+  SELECT SINGLE btype binum brname copost bank
+                bacc email AS remail phnum AS rphnum
+    FROM ztassfi0001
+    INTO CORRESPONDING FIELDS OF ps_str
+   WHERE bpid = pv_bpid.
+<font color ="#0000FF">*</font>
+<font color ="#0000FF">*  SELECT SINGLE email phnum</font>
+<font color ="#0000FF">*    FROM ztassfi0001</font>
+<font color ="#0000FF">*    INTO (ps_str-remail, ps_str-rphnum)</font>
+<font color ="#0000FF">*   WHERE bpid = pv_bpid.</font>
+ENDFORM.
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& Form get_bank_name</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& text</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*&      --&gt; PS_STR_BANK</font>
+<font color ="#0000FF">*&      &lt;-- PS_STR_BANKT</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+FORM get_bank_name  USING    VALUE(pv_bank)
+                    CHANGING pv_bname.
+<font color ="#0000FF">*  CLEAR pv_bname.</font>
+<font color ="#0000FF">*  SELECT SINGLE bname</font>
+<font color ="#0000FF">*    FROM ztassfi0004_t</font>
+<font color ="#0000FF">*    INTO pv_bname</font>
+<font color ="#0000FF">*   WHERE bank = pv_bank</font>
+<font color ="#0000FF">*     AND spras = sy-langu.</font>
+  call function <a href ="zfasscw0401/zfasscw0401.html">'ZFASSCW0401'</a>
+    EXPORTING
+      iv_bank  = pv_bank
+    IMPORTING
+      ev_bname = pv_bname.
+
+ENDFORM.
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& Form get_emp_info</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& text</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*&      --&gt; PS_STR_EMPNO</font>
+<font color ="#0000FF">*&      &lt;-- PS_STR</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+FORM get_emp_info  USING    VALUE(pv_empid)
+                   CHANGING ps_str.
+  SELECT SINGLE empid lname fname rank depid adrss phnum email jdate ldate gender
+    FROM ztassfi0002
+    INTO CORRESPONDING FIELDS OF ps_str
+   WHERE empid = pv_empid.
+ENDFORM.
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& Form get_depart_name</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& text</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*&      --&gt; PS_STR_DEPID</font>
+<font color ="#0000FF">*&      &lt;-- PS_STR_DNAME</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+FORM get_depart_name  USING    VALUE(pv_depid)
+                      CHANGING pv_dname.
+<font color ="#0000FF">*  CLEAR pv_dname.</font>
+<font color ="#0000FF">*  SELECT SINGLE dname</font>
+<font color ="#0000FF">*    FROM ztassfi0003_t</font>
+<font color ="#0000FF">*    INTO pv_dname</font>
+<font color ="#0000FF">*   WHERE depid = pv_depid</font>
+<font color ="#0000FF">*     AND spras = sy-langu.</font>
+  call function <a href ="zfasscw0501/zfasscw0501.html">'ZFASSCW0501'</a>
+    EXPORTING
+      iv_depid = pv_depid
+    IMPORTING
+      ev_dname = pv_dname.
+
+ENDFORM.
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& Form display_alv_03</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& text</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& --&gt;  p1        text</font>
+<font color ="#0000FF">*& &lt;--  p2        text</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+FORM display_alv_03 .
+  PERFORM set_layout_03.
+  PERFORM set_fieldcatalog_03.
+  PERFORM set_sort_03.
+
+  CALL METHOD go_alv3-&gt;set_table_for_first_display
+    EXPORTING
+<font color ="#0000FF">*     i_buffer_active               =</font>
+<font color ="#0000FF">*     i_bypassing_buffer            =</font>
+<font color ="#0000FF">*     i_consistency_check           =</font>
+      i_structure_name              = 'ZSASSMM0411'
+<font color ="#0000FF">*     is_variant                    =</font>
+<font color ="#0000FF">*     i_save                        =</font>
+<font color ="#0000FF">*     i_default                     = 'X'</font>
+      is_layout                     = gs_layo3
+<font color ="#0000FF">*     is_print                      =</font>
+<font color ="#0000FF">*     it_special_groups             =</font>
+<font color ="#0000FF">*     it_toolbar_excluding          =</font>
+<font color ="#0000FF">*     it_hyperlink                  =</font>
+<font color ="#0000FF">*     it_alv_graphics               =</font>
+<font color ="#0000FF">*     it_except_qinfo               =</font>
+<font color ="#0000FF">*     ir_salv_adapter               =</font>
+    CHANGING
+      it_outtab                     = gt_list3
+      it_fieldcatalog               = gt_fcat3
+      it_sort                       = gt_sort3
+<font color ="#0000FF">*     it_filter                     =</font>
+    EXCEPTIONS
+      invalid_parameter_combination = 1
+      program_error                 = 2
+      too_many_lines                = 3
+      OTHERS                        = 4.
+  IF sy-subrc &lt;&gt; 0.
+<font color ="#0000FF">*   Implement suitable error handling here</font>
+  ENDIF.
+ENDFORM.
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& Form clear_pop_up_screen</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& text</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*&      &lt;-- ZSASSMM0404</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+FORM clear_pop_up_screen  CHANGING ps_str.
+  CLEAR ps_str.
+ENDFORM.
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& Form set_create_default</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& text</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*&      &lt;-- ZSASSMM0402</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+FORM set_create_default  CHANGING ps_str TYPE zsassmm0402.
+  ps_str-picid = sy-uname.
+  "####
+  PERFORM get_emp_name USING ps_str-picid
+                       CHANGING ps_str-sname.
+  ps_str-ordat = sy-datum.
+  ps_str-waers = 'KRW'.
+ENDFORM.
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& Form data_temp_save</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& text</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*&      --&gt; GT_LIST1</font>
+<font color ="#0000FF">*&      --&gt; GT_LIST2</font>
+<font color ="#0000FF">*&      --&gt; GS_CON</font>
+<font color ="#0000FF">*&      &lt;-- GT_MOVE1</font>
+<font color ="#0000FF">*&      &lt;-- GT_MOVE2</font>
+<font color ="#0000FF">*&      &lt;-- GS_MOVE</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+FORM data_temp_save  USING    VALUE(pt_list1)
+                              VALUE(pt_list2)
+                     CHANGING pt_move1
+                              pt_move2.
+  CLEAR: pt_move1, pt_move2.
+  MOVE-CORRESPONDING pt_list1 TO pt_move1.
+  MOVE-CORRESPONDING pt_list2 TO pt_move2.
+ENDFORM.
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& Form set_edit_default</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& text</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*&      --&gt; GT_LIST</font>
+<font color ="#0000FF">*&      --&gt; GS_LIST</font>
+<font color ="#0000FF">*&      &lt;-- ZSASSMM0402</font>
+<font color ="#0000FF">*&      &lt;-- GT_LIST2</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+FORM set_edit_default  USING    VALUE(pt_list) TYPE zsassmm0402_t
+                                VALUE(ps_list) TYPE zsassmm0402
+                       CHANGING ps_edit TYPE zsassmm0402
+                                pt_list2 TYPE zsassmm0403_t
+                                ps_list2 TYPE zsassmm0403
+                                pt_rows TYPE lvc_t_row
+                                ps_rows TYPE lvc_s_row
+                                pv_subrc
+                                pt_domain TYPE dd07v_t
+                                ps_domain TYPE dd07v.
+  CLEAR: pv_subrc.
+  PERFORM get_selected_rows USING pt_rows
+                            CHANGING pv_subrc.
+  IF pv_subrc = 2.  " 1## ##
+    READ TABLE pt_rows INDEX 1 INTO ps_rows.
+    READ TABLE pt_list INDEX ps_rows-index INTO ps_list.
+    IF ps_list-picid &lt;&gt; sy-uname.
+      MESSAGE i062(zmcassmm04).               "### ### #### ##, ### #####.
+      pv_subrc = 6.
+      RETURN.
+    ENDIF.
+    IF ps_list-rstat = 'B'.
+      MESSAGE i032(zmcassmm04).               "## ### #####. ###### ## ### ######.
+      pv_subrc = 6.
+      RETURN.
+    ELSEIF ps_list-canc = 'X'.
+      IF ok_code = 'EDIT'.
+        MESSAGE i038(zmcassmm04). "### ## ### ### # ####.
+      ELSEIF ok_code = 'DELETE'.
+        MESSAGE i040(zmcassmm04). "## ### #####.
+      ENDIF.
+      pv_subrc = 6.
+      RETURN.
+    ENDIF.
+    IF ps_list-appsta = 'D'.
+      MESSAGE i057(zmcassmm04).       "### ### #### # ####. ## ######.
+      pv_subrc = 6.
+      RETURN.
+    ENDIF.
+    MOVE-CORRESPONDING ps_list TO ps_edit.
+    ps_edit-chdat = sy-datum.
+    ps_list2-ordid = ps_list-ordid.
+
+    " ## ## ALV ## ## ##
+    PERFORM get_main_info_alv_02 CHANGING pt_list2
+                                          ps_list2.
+
+    " ####, ##, #####, ####, ####, ###, ### ##
+    PERFORM get_add_info_alv_02 CHANGING pt_list2
+                                         ps_list2.
+
+    " ## ## Text
+    PERFORM get_submit_text USING ps_edit-rstat
+                                  pt_domain
+                                  'ZDASS_RSTAT'
+                            CHANGING ps_edit-rstatt.
+
+    " ## ## Text
+    PERFORM get_canc_text USING ps_edit-canc
+                                pt_domain
+                                'ZDASS_CANC'
+                          CHANGING ps_edit-canct.
+  ELSE.        " ## # ##
+    RETURN.
+  ENDIF.
+ENDFORM.
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& Form get_month_plan</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& text</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*&      --&gt; ZSASSMM0410</font>
+<font color ="#0000FF">*&      &lt;-- GT_LIST3</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+FORM get_month_plan  USING    VALUE(ps_pln) TYPE zsassmm0410
+                     CHANGING pt_list3 TYPE zsassmm0411_t
+                              ps_list3 TYPE zsassmm0411
+                              pt_list2 TYPE zsassmm0403_t
+                              ps_list2 TYPE zsassmm0403.
+  DATA: BEGIN OF ls_plmon,
+          plaid TYPE zsassmm0410-plaid,
+          plmon TYPE zsassmm0410-plmon,
+        END OF ls_plmon,
+        lt_plmon LIKE TABLE OF ls_plmon,
+        lv_month TYPE n LENGTH 6,
+        lt_temp  LIKE pt_list3.
+  CLEAR: pt_list3, ps_list3.
+  lv_month = sy-datum(6).
+  IF ps_pln-plmon &lt; lv_month.
+    MESSAGE i042(zmcassmm04).   "### ### #### # ####.
+    RETURN.
+  ENDIF.
+  " ### ## #### ## ##ID ##
+  SELECT a~plaid plmon
+    FROM ztassmm0101 AS a
+   INNER JOIN ztassfi0201 AS b
+      ON a~plaid = b~codoc
+    INTO CORRESPONDING FIELDS OF TABLE lt_plmon
+   WHERE plmon = ps_pln-plmon
+     AND b~appsta = 'E'.
+  " ## ## ##
+  LOOP AT lt_plmon INTO ls_plmon.
+    SELECT a~plaid a~plano a~fdid a~plamt a~plpri b~waers
+      FROM ztassmm0102 AS a
+     INNER JOIN ztassmm0101 AS b
+        ON a~plaid = b~plaid
+      INTO CORRESPONDING FIELDS OF TABLE lt_temp
+     WHERE a~plaid = ls_plmon-plaid.
+    APPEND LINES OF lt_temp TO gt_list3.
+  ENDLOOP.
+  "####  ##
+  LOOP AT pt_list3 INTO ps_list3.
+    " ####, ## ##
+    PERFORM get_food_name USING ps_list3-fdid
+                          CHANGING ps_list3-fdname
+                                   ps_list3-wunit.
+    " #### ##
+    PERFORM get_remain_amount USING ps_list3
+                                    pt_list2
+                                    ps_list2
+                              CHANGING ps_list3-reamt.
+    MODIFY pt_list3 FROM ps_list3.
+  ENDLOOP.
+ENDFORM.
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& Form set_layout_03</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& text</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& --&gt;  p1        text</font>
+<font color ="#0000FF">*& &lt;--  p2        text</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+FORM set_layout_03 .
+  IF gs_layo3 IS INITIAL.
+    gs_layo3-cwidth_opt = 'X'.
+    gs_layo3-zebra = 'X'.
+    gs_layo3-sel_mode = 'A'.
+    gs_layo3-no_merging = 'X'.
+  ENDIF.
+ENDFORM.
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& Form set_fieldcatalog_03</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& text</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& --&gt;  p1        text</font>
+<font color ="#0000FF">*& &lt;--  p2        text</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+FORM set_fieldcatalog_03 .
+  CLEAR: gt_fcat3, gs_fcat3.
+
+  gs_fcat3-fieldname = 'WUNIT'.
+  gs_fcat3-coltext = TEXT-c03.
+  APPEND gs_fcat3 TO gt_fcat3.
+  CLEAR gs_fcat3.
+
+  gs_fcat3-fieldname = 'WAERS'.
+  gs_fcat3-coltext = TEXT-c01.
+  APPEND gs_fcat3 TO gt_fcat3.
+  CLEAR gs_fcat3.
+
+  gs_fcat3-fieldname = 'PLANO'.
+  gs_fcat3-lzero = 'X'.
+  APPEND gs_fcat3 TO gt_fcat3.
+  CLEAR gs_fcat3.
+ENDFORM.
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& Form set_sort_03</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& text</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& --&gt;  p1        text</font>
+<font color ="#0000FF">*& &lt;--  p2        text</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+FORM set_sort_03 .
+  CLEAR: gt_sort3, gs_sort3.
+  gs_sort3-spos = 1.
+  gs_sort3-fieldname = 'PLAID'.
+  gs_sort3-up = 'X'.
+  APPEND gs_sort3 TO gt_sort3.
+  CLEAR gs_sort3.
+
+  gs_sort3-spos = 2.
+  gs_sort3-fieldname = 'PLANO'.
+  gs_sort3-up = 'X'.
+  APPEND gs_sort3 TO gt_sort3.
+  CLEAR gs_sort3.
+ENDFORM.
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& Form payment_sum</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& text</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*&      &lt;-- ZSASSMM0402</font>
+<font color ="#0000FF">*&      &lt;-- GT_LIST2</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+FORM payment_sum  CHANGING ps_con TYPE zsassmm0402
+                           pt_list2 TYPE zsassmm0403_t.
+  DATA: BEGIN OF ls_sum,
+          orpri TYPE zsassmm0403-orpri,
+          oramt TYPE zsassmm0403-oramt,
+          opsum TYPE zsassmm0404-opsum,
+        END OF ls_sum,
+        lt_sum       LIKE TABLE OF ls_sum,
+        lv_total_sum LIKE ls_sum-opsum.
+  " gt_list2## select
+  SELECT orpri, oramt
+    FROM @pt_list2 AS a
+   WHERE canc &lt;&gt; 'X'
+    INTO TABLE @lt_sum.
+  " ### ## ###
+  LOOP AT lt_sum INTO ls_sum.
+    ls_sum-opsum = ls_sum-orpri * ls_sum-oramt.
+    MODIFY lt_sum FROM ls_sum.
+  ENDLOOP.
+  CLEAR ls_sum.
+  "##
+  lv_total_sum = 0.
+  LOOP AT lt_sum INTO ls_sum.
+    lv_total_sum = lv_total_sum + ls_sum-opsum.
+  ENDLOOP.
+
+  ps_con-opsum = lv_total_sum.
+ENDFORM.
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& Form set_default_data_create_item</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& text</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*&      --&gt; GS_LIST3</font>
+<font color ="#0000FF">*&      &lt;-- ZSASSMM0412</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+FORM set_default_data_create_item  USING    VALUE(ps_list3) TYPE zsassmm0411
+                                   CHANGING ps_str TYPE zsassmm0412.
+  CLEAR ps_str.
+  ps_str-plamt = ps_list3-reamt.
+  ps_str-oramt = ps_str-plamt.
+  ps_str-plpri = ps_list3-plpri.
+  ps_str-orpri = ps_list3-plpri.
+  ps_str-tgdat = sy-datum + 7.
+  ps_str-waers = 'KRW'.
+  ps_str-waers2 = 'KRW'.
+  ps_str-wunit = ps_list3-wunit.
+  ps_str-wunit2 = ps_list3-wunit.
+  ps_str-fdid = ps_list3-fdid.
+  ps_str-plaid = ps_list3-plaid.
+  ps_str-plano = ps_list3-plano.
+  " ComboBox# ##### ## ### ###
+  PERFORM set_combobox USING ps_list3-fdid CHANGING ps_str.
+
+ENDFORM.
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& Form get_selected_rows_03</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& text</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*&      &lt;-- GT_ROWS</font>
+<font color ="#0000FF">*&      &lt;-- GV_SUBRC</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+FORM get_selected_rows_03  CHANGING pt_rows TYPE lvc_t_row
+                                    pv_subrc.
+<font color ="#0000FF">*  CLEAR pv_subrc.</font>
+<font color ="#0000FF">*  DATA lv_rows TYPE i.</font>
+<font color ="#0000FF">*  CLEAR: lv_rows, pv_subrc, pt_rows.</font>
+<font color ="#0000FF">*  CALL METHOD go_alv3-&gt;get_selected_rows</font>
+<font color ="#0000FF">*    IMPORTING</font>
+<font color ="#0000FF">*      et_index_rows = pt_rows</font>
+<font color ="#0000FF">**     et_row_no     =</font>
+<font color ="#0000FF">*    .</font>
+<font color ="#0000FF">*  DESCRIBE TABLE pt_rows LINES lv_rows.</font>
+<font color ="#0000FF">*  IF lv_rows = 0.</font>
+<font color ="#0000FF">*    pv_subrc = 0.</font>
+<font color ="#0000FF">*  ELSEIF lv_rows = 1.</font>
+<font color ="#0000FF">*    pv_subrc = 2.</font>
+<font color ="#0000FF">*  ELSE.</font>
+<font color ="#0000FF">*    pv_subrc = 4.</font>
+<font color ="#0000FF">*  ENDIF.</font>
+  call function <a href ="zfassmm0403/zfassmm0403.html">'ZFASSMM0403'</a>
+    EXPORTING
+      i_alv    = go_alv3
+    IMPORTING
+      ev_subrc = pv_subrc
+      et_rows  = pt_rows.
+
+ENDFORM.
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& Form add_item_condition</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& text</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*&      &lt;-- ZSASSMM0412</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+FORM add_item_condition  CHANGING ps_str TYPE zsassmm0412 pv_subrc.
+  DATA: lv_date TYPE d.
+  CLEAR pv_subrc.
+  lv_date = sy-datum + 14.
+  " ## ### ##
+  IF ps_str-tgdat &gt; lv_date OR ps_str-tgdat &lt; sy-datum.
+    ps_str-tgdat = sy-datum + 7.
+    MESSAGE i006(zmcassmm04) WITH sy-datum.   "## #### ## &## 14# ### #### ## #####
+    RETURN.
+  ENDIF.
+  " ## ## ##
+  IF ps_str-oramt &gt; ps_str-plamt.
+    ps_str-oramt = ps_str-plamt.
+    MESSAGE i008(zmcassmm04).                 "## ## #### # ## #### # ####
+    RETURN.
+  ENDIF.
+  " ## ## ##
+  IF ps_str-orpri &gt; ps_str-plpri * 110 / 100.
+    ps_str-orpri = ps_str-plpri * 110 / 100.
+    MESSAGE i007(zmcassmm04).                 "## ### ## ### +/- 10% #### #####
+    RETURN.
+  ELSEIF ps_str-orpri &lt; ps_str-plpri * 90 / 100.
+    ps_str-orpri = ps_str-plpri * 90 / 100.
+    MESSAGE i007(zmcassmm04).                 "## ### ## ### +/- 10% #### #####
+    RETURN.
+  ENDIF.
+  IF ps_str-wacombo IS INITIAL.
+    MESSAGE i009(zmcassmm04).                 "### ### ##### ####
+    RETURN.
+  ENDIF.
+  IF ps_str-oramt = 0.
+    MESSAGE i024(zmcassmm04).                 "## ### ######.
+    RETURN.
+  ENDIF.
+  pv_subrc = 4.
+ENDFORM.
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& Form set_combobox</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& text</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*&      &lt;-- PS_STR</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+FORM set_combobox  USING VALUE(pv_fdid) CHANGING ps_str TYPE zsassmm0412.
+  DATA: lt_combobox TYPE vrm_values,
+        ls_combobox TYPE vrm_value,
+        lv_stway    TYPE zsassmm0408-stway.
+  SELECT SINGLE stway
+    FROM ztassmm0301
+    INTO lv_stway
+   WHERE fdid = pv_fdid.
+
+
+  SELECT a~wahid wname
+    FROM ztassmm0001 AS a INNER JOIN ztassmm0001_t AS b
+      ON a~wahid = b~wahid
+    INTO TABLE lt_combobox
+   WHERE a~stway = lv_stway.
+
+  CALL FUNCTION 'VRM_SET_VALUES'
+    EXPORTING
+      id              = 'zsassmm0412-wacombo'
+      values          = lt_combobox
+    EXCEPTIONS
+      id_illegal_name = 1
+      OTHERS          = 2.
+  IF sy-subrc &lt;&gt; 0.
+<font color ="#0000FF">* Implement suitable error handling here</font>
+  ENDIF.
+
+ENDFORM.
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& Form append_order</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& text</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*&      --&gt; ZSASSMM0412</font>
+<font color ="#0000FF">*&      &lt;-- GT_LIST2</font>
+<font color ="#0000FF">*&      &lt;-- GS_LIST2</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+FORM append_order  USING    VALUE(ps_str) TYPE zsassmm0412
+                   CHANGING pt_list2 TYPE zsassmm0403_t
+                            ps_list2 TYPE zsassmm0403
+                            pv_subrc2 pv_subrc3 pv_move.
+  DATA ls_data TYPE zsassmm0403.
+  MOVE-CORRESPONDING ps_str TO ls_data.
+  ls_data-wahid = ps_str-wacombo.
+  " ####, ## ##
+  PERFORM get_food_name USING ls_data-fdid
+                        CHANGING ls_data-fdname
+                                 ls_data-wunit.
+  " ### ##
+  PERFORM get_warehouse_name USING ls_data-wahid
+                             CHANGING ls_data-wname.
+  " ####, ### ##
+  PERFORM get_plant_info USING ls_data-wahid
+                         CHANGING ls_data-pntid
+                                  ls_data-pname.
+  " #####, #### ##
+  PERFORM get_location_info USING ls_data-pntid
+                            CHANGING ls_data-locid
+                                     ls_data-loname.
+  IF pv_subrc2 = 8.       " #### ### ##
+    CLEAR: pv_subrc2, ps_list2.
+    " ##
+    SORT pt_list2 BY ordno DESCENDING.
+    READ TABLE pt_list2 INDEX 1 INTO ps_list2.
+    ls_data-ordno = ps_list2-ordno + 1.
+    IF pv_subrc3 = 2.   "####(Screen 200)## ##
+      " #### ### ##
+    ELSEIF pv_subrc3 = 4.   " ####(Screen 300)## ##
+      ls_data-ordid = pv_move.    "###### ### ## #### ## ## ## X
+      CLEAR pv_move.
+    ENDIF.
+    CLEAR pv_subrc3.
+<font color ="#0000FF">*    LOOP AT pt_list2 INTO ps_list2.</font>
+<font color ="#0000FF">*      IF ps_list2-plaid = ls_data AND ps_list2-plano = ls_data-plano</font>
+<font color ="#0000FF">*     AND ps_list2-wahid = ls_data-wahid AND ps_list2-orpri = ls_data-orpri.</font>
+<font color ="#0000FF">*        ls_data-oramt = ps_list2-oramt + ls_data-oramt.</font>
+<font color ="#0000FF">*        MODIFY pt_list2 FROM ls_data TRANSPORTING oramt.</font>
+<font color ="#0000FF">*        pv_subrc3 = 2.</font>
+<font color ="#0000FF">*      ENDIF.</font>
+<font color ="#0000FF">*    ENDLOOP.</font>
+<font color ="#0000FF">*    IF pv_subrc3 &lt;&gt; 2.</font>
+    APPEND ls_data TO pt_list2.
+<font color ="#0000FF">*    ENDIF.</font>
+    CLEAR pv_subrc3.
+  ELSEIF pv_subrc2 = 6.   " ## #### ### ##
+    CLEAR pv_subrc2.
+    READ TABLE pt_list2 INTO ps_list2 WITH KEY ordno = ls_data-ordno.
+    IF sy-subrc = 0.
+      MODIFY pt_list2 FROM ls_data INDEX sy-tabix.
+    ENDIF.
+  ENDIF.
+ENDFORM.
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& Form get_remain_amount</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& text</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*&      --&gt; PS_LIST3_PLAMT</font>
+<font color ="#0000FF">*&      --&gt; PT_LIST2</font>
+<font color ="#0000FF">*&      --&gt; PS_LIST2</font>
+<font color ="#0000FF">*&      &lt;-- PS_LIST3_REAMT</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+FORM get_remain_amount  USING    VALUE(ps_list3) TYPE zsassmm0411
+                                 VALUE(pt_list2) TYPE zsassmm0403_t
+                                 VALUE(ps_list2) TYPE zsassmm0403
+                        CHANGING pv_reamt.
+  CLEAR pv_reamt.
+  DATA: ls_oramt TYPE zsassmm0403-oramt,
+        lt_oramt LIKE TABLE OF ls_oramt,
+        BEGIN OF ls_oramt2,
+          ordid TYPE zsassmm0403-ordid,
+          oramt TYPE zsassmm0403-oramt,
+        END OF ls_oramt2,
+        lt_oramt2     LIKE TABLE OF ls_oramt2,
+        lv_total_sum  LIKE ls_oramt,
+        lv_total_sum2 LIKE ls_oramt,
+        ls_ordid      TYPE zsassmm0403-ordid,
+        lt_ordid      LIKE TABLE OF ls_ordid.
+  " ### ## ## ## ## =&gt; ## ## #### ## ## ## ## =&gt; #### ### ## ## ### ### ##
+
+  " ### ## ## ##
+  SELECT ordid
+    FROM ztassmm0201
+    INTO TABLE lt_ordid
+   WHERE canc = 'X'.
+
+  " ## ## #### ## ## ## ##
+  SELECT ordid oramt
+    FROM ztassmm0202
+    INTO CORRESPONDING FIELDS OF TABLE lt_oramt2
+   WHERE plaid = ps_list3-plaid
+     AND plano = ps_list3-plano
+     AND canc &lt;&gt; 'X'.
+
+  "### ## ### ### ## ##
+  LOOP AT lt_ordid INTO ls_ordid.
+    DELETE lt_oramt2 WHERE ordid = ls_ordid.
+  ENDLOOP.
+
+  "## ## ## # #### ## ### ### ##
+  lv_total_sum2 = 0.
+  LOOP AT lt_oramt2 INTO ls_oramt2.
+    lv_total_sum2 = ls_oramt2-oramt + lv_total_sum2.
+  ENDLOOP.
+
+  " ## #### ## ## ##
+  SELECT oramt
+    FROM @pt_list2 AS a
+   WHERE plaid = @ps_list3-plaid
+     AND plano = @ps_list3-plano
+     AND canc &lt;&gt; 'X'
+    INTO TABLE @lt_oramt.
+  " ### # ## ##
+  lv_total_sum = 0.
+  LOOP AT lt_oramt INTO ls_oramt.
+    lv_total_sum = ls_oramt + lv_total_sum.
+  ENDLOOP.
+  " #### = ## ## ## - ## #### ### # ##  - DB# ### ## ## ## # #### ## ### # ##
+  pv_reamt = ps_list3-plamt - lv_total_sum - lv_total_sum2.
+ENDFORM.
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& Form get_selected_rows_02</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& text</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*&      &lt;-- GT_ROWS</font>
+<font color ="#0000FF">*&      &lt;-- GV_SUBRC</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+FORM get_selected_rows_02  CHANGING pt_rows TYPE lvc_t_row
+                                    pv_subrc.
+<font color ="#0000FF">*  DATA lv_rows TYPE i.</font>
+<font color ="#0000FF">*  CLEAR: lv_rows, pv_subrc, pt_rows.</font>
+<font color ="#0000FF">*  CALL METHOD go_alv2-&gt;get_selected_rows</font>
+<font color ="#0000FF">*    IMPORTING</font>
+<font color ="#0000FF">*      et_index_rows = pt_rows</font>
+<font color ="#0000FF">**     et_row_no     =</font>
+<font color ="#0000FF">*    .</font>
+<font color ="#0000FF">*  DESCRIBE TABLE pt_rows LINES lv_rows.</font>
+<font color ="#0000FF">*  IF lv_rows = 0.</font>
+<font color ="#0000FF">*    pv_subrc = 0.</font>
+<font color ="#0000FF">*  ELSEIF lv_rows = 1.</font>
+<font color ="#0000FF">*    pv_subrc = 2.</font>
+<font color ="#0000FF">*  ELSE.</font>
+<font color ="#0000FF">*    pv_subrc = 4.</font>
+<font color ="#0000FF">*  ENDIF.</font>
+  call function <a href ="zfassmm0403/zfassmm0403.html">'ZFASSMM0403'</a>
+    EXPORTING
+      i_alv    = go_alv2
+    IMPORTING
+      ev_subrc = pv_subrc
+      et_rows  = pt_rows.
+
+ENDFORM.
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& Form set_default_data_edit_item</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& text</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*&      --&gt; GS_LIST3</font>
+<font color ="#0000FF">*&      &lt;-- ZSASSMM0412</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+FORM set_default_data_edit_item  USING    VALUE(ps_list2) TYPE zsassmm0403
+                                          VALUE(pt_list2) TYPE zsassmm0403_t
+                                 CHANGING ps_str TYPE zsassmm0412.
+  DATA ls_reamt TYPE zsassmm0411-reamt.
+  " #### ##
+  PERFORM get_remain_amount_edit USING pt_list2
+                                       ps_list2
+                                 CHANGING zsassmm0412
+                                          ls_reamt.
+
+  MOVE-CORRESPONDING ps_list2 TO ps_str.
+
+  SELECT SINGLE plpri
+    FROM ztassmm0102
+    INTO ps_str-plpri
+   WHERE plaid = ps_list2-plaid
+     AND plano = ps_list2-plano.
+
+
+  ps_str-plamt = ps_str-oramt + ls_reamt.          "## ##
+  ps_str-tgdat = sy-datum + 7.
+  ps_str-wunit2 = ps_str-wunit.
+  ps_str-waers2 = ps_str-waers.
+  ps_str-wacombo = ps_str-wahid.
+  " ComboBox# ##### ## ### ###
+  PERFORM set_combobox USING ps_list2-fdid CHANGING ps_str.
+ENDFORM.
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& Form get_remain_amount_edit</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& text</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*&      --&gt; GT_LIST2</font>
+<font color ="#0000FF">*&      --&gt; GS_LIST2</font>
+<font color ="#0000FF">*&      &lt;-- ZSASSMM0412</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+FORM get_remain_amount_edit  USING    VALUE(pt_list2) TYPE zsassmm0403_t
+                                      VALUE(ps_list2) TYPE zsassmm0403
+                             CHANGING ps_str TYPE zsassmm0412
+                                      ps_reamt.
+  CLEAR ps_reamt.
+  DATA: ls_oramt  TYPE zsassmm0403-oramt,
+        lt_oramt  LIKE TABLE OF ls_oramt,
+        lv_sum    LIKE ls_oramt,
+        ls_plamt  TYPE zsassmm0411-plamt,
+        ls_oramt2 LIKE ls_oramt,
+        lt_oramt2 LIKE TABLE OF ls_oramt2,
+        lv_sum2   LIKE lv_sum.
+  " ## ## #### ## ## ## ##
+  SELECT oramt
+    FROM ztassmm0202
+    INTO TABLE lt_oramt2
+   WHERE plaid = ps_list2-plaid
+     AND plano = ps_list2-plano
+     AND canc &lt;&gt; 'X'.
+
+  lv_sum2 = 0.
+  LOOP AT lt_oramt2 INTO ls_oramt2.
+    lv_sum2 = ls_oramt2 + lv_sum2.
+  ENDLOOP.
+
+  " ### ## ## ## ####
+  SELECT oramt
+    FROM @pt_list2 AS a
+   WHERE plaid = @ps_list2-plaid
+     AND plano = @ps_list2-plano
+     AND canc &lt;&gt; 'X'
+    INTO TABLE @lt_oramt.
+  " ### # ##
+  lv_sum = 0.
+  LOOP AT lt_oramt INTO ls_oramt.
+    lv_sum = lv_sum + ls_oramt.
+  ENDLOOP.
+  " ## ##
+  SELECT SINGLE plamt
+    FROM ztassmm0102
+    INTO ls_plamt
+   WHERE plaid = ps_list2-plaid
+     AND plano = ps_list2-plano.
+  " ####
+  ps_reamt = ls_plamt - lv_sum - lv_sum2.
+ENDFORM.
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& Form call_message</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& text</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*&      &lt;-- GV_SUBRC</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+FORM call_message  USING VALUE(pv_text) CHANGING pv_subrc.
+  DATA lv_answer TYPE c.
+  CLEAR: lv_answer, pv_subrc.
+  call function <a href ="zfasscw1001/zfasscw1001.html">'ZFASSCW1001'</a>
+    EXPORTING
+      iv_text   = pv_text
+    IMPORTING
+      ev_answer = lv_answer.
+
+
+  IF lv_answer = 1.     "Yes
+    pv_subrc = 2.
+  ELSEIF lv_answer = 2. "No
+    pv_subrc = 4.
+  ENDIF.
+ENDFORM.
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& Form seq_screen_0100</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& text</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*&      &lt;-- GT_LIST2</font>
+<font color ="#0000FF">*&      &lt;-- GS_LIST2</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+FORM seq_screen_0100  CHANGING pt_list2 TYPE zsassmm0403_t
+                               ps_list2 TYPE zsassmm0403.
+  DELETE pt_list2 WHERE canc = 'X'.
+  SORT pt_list2 BY ordno.
+  LOOP AT pt_list2 INTO ps_list2.
+    ps_list2-ordno2 = sy-tabix.
+    MODIFY pt_list2 FROM ps_list2 TRANSPORTING ordno2.
+  ENDLOOP.
+ENDFORM.
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& Form upload_data</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& text</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*&      --&gt; GT_LIST2</font>
+<font color ="#0000FF">*&      --&gt; ZSASSMM0402</font>
+<font color ="#0000FF">*&      &lt;-- GV_SUBRC</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+FORM upload_data  CHANGING pt_list2 TYPE zsassmm0403_t
+                           ps_list2 TYPE zsassmm0403
+                           ps_str TYPE zsassmm0402
+                           pv_subrc
+                           pt_domain TYPE dd07v_t
+                           ps_domain TYPE dd07v
+                           pt_list TYPE zsassmm0402_t.
+  DATA: ls_header TYPE ztassmm0201,
+        ls_item   TYPE ztassmm0202,
+        lt_item   LIKE TABLE OF ls_item.
+  CLEAR: pv_subrc, ls_header, ls_item, lt_item.
+  IF sy-dynnr = 0200.
+    IF ok_code = 'SAVE'.
+      ps_str-rstat = 'A'.
+      " ## ##
+      PERFORM get_order_number CHANGING ps_str-ordid.
+    ELSEIF ok_code = 'SUBMIT'.
+      ps_str-rstat = 'B'.
+    ENDIF.
+    " ## ## Text
+    PERFORM get_submit_text USING ps_str-rstat
+                                  pt_domain
+                                  'ZDASS_RSTAT'
+                            CHANGING ps_str-rstatt.
+  ENDIF.
+  MOVE-CORRESPONDING ps_str TO ls_header.
+  UPDATE ztassmm0201 FROM ls_header.
+  IF sy-subrc &lt;&gt; 0.
+    INSERT ztassmm0201 FROM ls_header.
+    IF sy-subrc &lt;&gt; 0.
+      MESSAGE a026(zmcassmm04).         "### ### ##
+      ROLLBACK WORK.
+    ELSE.
+      pv_subrc = 2.
+    ENDIF.
+  ELSE.
+    pv_subrc = 2.       " ## ### ##
+  ENDIF.
+  IF pv_subrc = 2.                  "### ### #####
+    "####
+    PERFORM get_vender_name USING ps_str-bpid
+                            CHANGING ps_str-bpname.
+    ps_str-ltext = icon_display_text.
+    APPEND ps_str TO pt_list.
+    LOOP AT pt_list2 INTO ps_list2.
+      IF sy-dynnr = '0200'.
+        ps_list2-ordid = ps_str-ordid.
+        MODIFY pt_list2 FROM ps_list2 INDEX sy-tabix.
+      ELSEIF sy-dynnr = '0300'.
+
+      ENDIF.
+      MOVE-CORRESPONDING ps_list2 TO ls_item.
+      UPDATE ztassmm0202 FROM ls_item.
+      IF sy-subrc &lt;&gt; 0.
+        INSERT ztassmm0202 FROM ls_item.
+        IF sy-subrc &lt;&gt; 0.
+          MESSAGE a026(zmcassmm04).   "### ### ##
+          ROLLBACK WORK.
+        ENDIF.
+      ENDIF.
+    ENDLOOP.
+  ENDIF.
+  CLEAR: pv_subrc.
+  pv_subrc = 4.
+ENDFORM.
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& Form get_order_number</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& text</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*&      &lt;-- LV_ORDNO</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+FORM get_order_number  CHANGING pv_ordid.
+  CLEAR pv_ordid.
+  call function <a href ="zfassmm0401/zfassmm0401.html">'ZFASSMM0401'</a>
+    IMPORTING
+      ev_ordno = pv_ordid.
+ENDFORM.
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& Form check_condition</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& text</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*&      --&gt; GT_LIST2</font>
+<font color ="#0000FF">*&      --&gt; ZSASSMM0402</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+FORM check_condition  USING    VALUE(pt_list2) TYPE zsassmm0403_t
+                               ps_str TYPE zsassmm0402
+                      CHANGING pv_subrc.
+  CLEAR pv_subrc.
+  IF ps_str-rstat = 'B'.
+    MESSAGE i032(zmcassmm04).               "## ### #####. ###### ## ### ######.
+    pv_subrc = 2.
+  ELSEIF ps_str-bpid IS INITIAL OR zsassmm0402-htext IS INITIAL.
+    MESSAGE i020(zmcassmm04).   "### ##, ### ## ######.
+    pv_subrc = 2.
+  ELSEIF ps_str-bpid IS INITIAL.
+    MESSAGE i021(zmcassmm04).   "### ######.
+    pv_subrc = 2.
+  ELSEIF ps_str-htext IS INITIAL.
+    MESSAGE i022(zmcassmm04).   "### ### ######.
+    pv_subrc = 2.
+  ELSEIF pt_list2 IS INITIAL.
+    MESSAGE i028(zmcassmm04).   "## ### ## ### ######.
+    pv_subrc = 2.
+  ELSEIF ps_str-opsum = 0.
+    MESSAGE i029(zmcassmm04).   "## ### 0###. ## ### ######.
+    pv_subrc = 2.
+  ENDIF.
+ENDFORM.
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& Form recall_data</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& text</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*&      --&gt; GS_MOVE</font>
+<font color ="#0000FF">*&      --&gt; GT_MOVE1</font>
+<font color ="#0000FF">*&      --&gt; GT_MOVE2</font>
+<font color ="#0000FF">*&      &lt;-- ZSASSMM0401</font>
+<font color ="#0000FF">*&      &lt;-- GT_LIST</font>
+<font color ="#0000FF">*&      &lt;-- GT_LIST2</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+FORM recall_data  USING    VALUE(pt_move1)
+                           VALUE(pt_move2)
+                  CHANGING pt_list TYPE zsassmm0402_t
+                           pt_list2 TYPE zsassmm0403_t.
+  MOVE-CORRESPONDING pt_move1 TO pt_list.
+  MOVE-CORRESPONDING pt_move2 TO pt_list2.
+ENDFORM.
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& Form get_upload_data</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& text</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*&      --&gt; ZSASSMM0402</font>
+<font color ="#0000FF">*&      &lt;-- GT_LIST</font>
+<font color ="#0000FF">*&      &lt;-- GS_LIST</font>
+<font color ="#0000FF">*&      &lt;-- GT_LIST2</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+FORM get_upload_data  USING    VALUE(ps_str) TYPE zsassmm0402
+                      CHANGING pt_list TYPE zsassmm0402_t
+                               ps_list TYPE zsassmm0402
+                               pt_list2 TYPE zsassmm0403_t
+                               ps_list2 TYPE zsassmm0403
+                               ps_con TYPE zsassmm0401
+                               ps_move pv_subrc2.
+  CLEAR: pt_list, ps_list, pt_list2, ps_list2, pv_subrc2.
+  MOVE-CORRESPONDING ps_move TO ps_con.
+  MOVE-CORRESPONDING ps_str TO ps_list.
+  "####
+  PERFORM get_vender_name USING ps_str-bpid
+                          CHANGING ps_str-bpname.
+  APPEND ps_list TO pt_list.
+  ps_list2-ordid = ps_list-ordid.
+  " ## ## ALV ## ## ##
+  PERFORM get_main_info_alv_02 CHANGING pt_list2
+                                        ps_list2 .
+  " ####, ##, #####, ####, ####, ###, ### ##
+  PERFORM get_add_info_alv_02 CHANGING pt_list2
+                                       ps_list2.
+ENDFORM.
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& Form creat_appno</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& text</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*&      &lt;-- ZSASSMM0402</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+FORM creat_appno  CHANGING ps_str TYPE zsassmm0402
+                           pv_subrc
+                           pt_domain TYPE dd07v_t.
+  DATA: lv_appno  TYPE c LENGTH 12,
+        lv_ordid  TYPE c LENGTH 12,
+        lv_ordid2 TYPE c LENGTH 11.
+  IF sy-dynnr = 0200.
+    " ## ##
+    PERFORM get_order_number CHANGING lv_ordid2.
+    ps_str-ordid = lv_ordid2.
+    lv_ordid = lv_ordid2.
+  ELSE.
+    lv_ordid = ps_str-ordid.
+  ENDIF.
+  call function <a href ="zfassfi0101/zfassfi0101.html">'ZFASSFI0101'</a>
+    EXPORTING
+      iv_empid = sy-uname
+      iv_codoc = lv_ordid
+      iv_appty = 'PO'
+      iv_appno = ps_str-appno
+    IMPORTING
+      ev_appno = lv_appno.
+  " #### ### ### ##
+  IF lv_appno IS INITIAL.
+    MESSAGE a035(zmcassmm04).       "#### ## ##
+    ROLLBACK WORK.
+  ELSE.
+    ps_str-rstat = 'B'.
+    ps_str-appno = lv_appno.
+    " ## ## Text
+    PERFORM get_submit_text USING ps_str-rstat
+                                  pt_domain
+                                  'ZDASS_RSTAT'
+                            CHANGING ps_str-rstatt.
+    " ## ##
+    PERFORM get_appsta USING ps_str-ordid
+                       CHANGING ps_str-appsta.
+    " ## ## Text
+    PERFORM get_submit_text USING ps_str-appsta
+                                  pt_domain
+                                  'ZDASS_APPSTA'
+                            CHANGING ps_str-appstat.
+    pv_subrc = 4.
+  ENDIF.
+ENDFORM.
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& Form get_submit_text</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& text</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*&      --&gt; PS_STR_RSTAT</font>
+<font color ="#0000FF">*&      &lt;-- PT_DOMAIN</font>
+<font color ="#0000FF">*&      &lt;-- PS_DOMAIN</font>
+<font color ="#0000FF">*&      &lt;-- PS_STR_RSTATT</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+FORM get_submit_text  USING    VALUE(pv_rstat)
+                               VALUE(pt_domain) TYPE dd07v_t
+                               VALUE(pv_domname)
+                      CHANGING pv_rstatt.
+  DATA ls_domain TYPE dd07v.
+  READ TABLE pt_domain WITH KEY domname = pv_domname domvalue_l = pv_rstat INTO ls_domain.
+  pv_rstatt = ls_domain-ddtext.
+ENDFORM.
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& Form resubmit</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& text</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& --&gt;  p1        text</font>
+<font color ="#0000FF">*& &lt;--  p2        text</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+FORM resubmit CHANGING ps_str TYPE zsassmm0404
+                       pt_domain TYPE dd07v_t
+                       ps_domain TYPE dd07v
+                       pt_list TYPE zsassmm0402_t
+                       ps_list TYPE zsassmm0402.
+  DATA ls_data TYPE ztassmm0201.
+
+  call function <a href ="zfassfi0102/zfassfi0102.html">'ZFASSFI0102'</a>
+    EXPORTING
+      iv_appno = ps_str-appno.
+
+  ps_str-rstat = 'C'.
+  ps_str-appsta = 'C'.
+  " ## ## Text
+  PERFORM get_submit_text USING ps_str-rstat
+                                pt_domain
+                                'ZDASS_RSTAT'
+                          CHANGING ps_str-rstatt.
+  " ## ## Text
+  PERFORM get_submit_text USING ps_str-appsta
+                                pt_domain
+                                'ZDASS_APPSTA'
+                          CHANGING ps_str-appstat.
+  MOVE-CORRESPONDING ps_str TO ls_data.
+  UPDATE ztassmm0201 FROM ls_data.
+  IF sy-subrc &lt;&gt; 0.
+    MESSAGE a026(zmcassmm04).     "### ### ##
+    ROLLBACK WORK.
+  ELSE.
+    MESSAGE s037(zmcassmm04).     "## ## ##
+    COMMIT WORK.
+    CLEAR: pt_list, ps_list.
+    MOVE-CORRESPONDING ps_str TO ps_list.
+    ps_list-sname = ps_str-ename.
+    ps_list-ltext = icon_display_text.
+    APPEND ps_list TO pt_list.
+    LEAVE TO SCREEN 0.
+  ENDIF.
+ENDFORM.
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& Form delete_order</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& text</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& --&gt;  p1        text</font>
+<font color ="#0000FF">*& &lt;--  p2        text</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+FORM delete_order CHANGING ps_str TYPE zsassmm0402
+                           pt_list TYPE zsassmm0402_t.
+  DATA: ls_header TYPE ztassmm0201.
+  ps_str-canc = 'X'.
+  ps_str-cdat = sy-datum.
+
+  MOVE-CORRESPONDING ps_str TO ls_header.
+
+  "## ####
+  UPDATE ztassmm0201 FROM ls_header.
+  IF sy-subrc &lt;&gt; 0.
+    MESSAGE a026(zmcassmm04).       "### ### ##
+    ROLLBACK WORK.
+  ELSE.
+    MESSAGE s039(zmcassmm04).       "## ##
+    COMMIT WORK.
+    APPEND ps_str TO pt_list.
+  ENDIF.
+ENDFORM.
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& Form refresh_alv_01</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& text</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& --&gt;  p1        text</font>
+<font color ="#0000FF">*& &lt;--  p2        text</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+FORM refresh_alv_01 .
+  DATA ls_stable TYPE lvc_s_stbl.
+  ls_stable-row = 'X'.
+  ls_stable-col = 'X'.
+
+  PERFORM set_layout_01.
+  PERFORM set_fieldcatalog_01.
+  PERFORM set_sort_01.
+
+  CALL METHOD go_alv-&gt;set_frontend_layout
+    EXPORTING
+      is_layout = gs_layo.
+
+  CALL METHOD go_alv-&gt;set_frontend_fieldcatalog
+    EXPORTING
+      it_fieldcatalog = gt_fcat.
+
+
+  CALL METHOD go_alv-&gt;refresh_table_display
+    EXPORTING
+      is_stable = ls_stable
+<font color ="#0000FF">*     i_soft_refresh =</font>
+    EXCEPTIONS
+      finished  = 1
+      OTHERS    = 2.
+  IF sy-subrc &lt;&gt; 0.
+<font color ="#0000FF">*   Implement suitable error handling here</font>
+  ENDIF.
+
+ENDFORM.
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& Form get_btype_text</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& text</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*&      --&gt; PS_STR_BTYPE</font>
+<font color ="#0000FF">*&      &lt;-- PS_STR_BTYPET</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+FORM get_btype_text  USING    VALUE(pv_btype)
+                              VALUE(pt_domain) TYPE dd07v_t
+                              VALUE(pv_domname)
+                     CHANGING pv_btypet.
+  DATA ls_domain TYPE dd07v.
+  READ TABLE pt_domain WITH KEY domname = pv_domname domvalue_l = pv_btype INTO ls_domain.
+  pv_btypet = ls_domain-ddtext.
+ENDFORM.
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& Form get_rank_text</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& text</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*&      --&gt; PS_STR_RANK</font>
+<font color ="#0000FF">*&      &lt;-- PS_STR_RANKT</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+FORM get_rank_text  USING    VALUE(pv_rank)
+                             VALUE(pt_domain) TYPE dd07v_t
+                             VALUE(pv_domname)
+                    CHANGING pv_rankt.
+  DATA ls_domain TYPE dd07v.
+  READ TABLE pt_domain WITH KEY domname = pv_domname domvalue_l = pv_rank INTO ls_domain.
+  pv_rankt = ls_domain-ddtext.
+ENDFORM.
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& Form get_gender_text</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& text</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*&      --&gt; PS_STR_GENDER</font>
+<font color ="#0000FF">*&      &lt;-- PS_STR_GENDERT</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+FORM get_gender_text  USING    VALUE(pv_gender)
+                               VALUE(pt_domain) TYPE dd07v_t
+                               VALUE(pv_domname)
+                      CHANGING pv_gendert.
+  DATA ls_domain TYPE dd07v.
+  READ TABLE pt_domain WITH KEY domname = pv_domname domvalue_l = pv_gender INTO ls_domain.
+  pv_gendert = ls_domain-ddtext.
+
+ENDFORM.
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& Form get_canc_text</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& text</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*&      --&gt; PS_STR_CANC</font>
+<font color ="#0000FF">*&      &lt;-- PS_STR_CANCT</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+FORM get_canc_text  USING    VALUE(pv_canc)
+                             VALUE(pt_domain) TYPE dd07v_t
+                             VALUE(pv_domname)
+                    CHANGING pv_canct.
+  DATA ls_domain TYPE dd07v.
+  READ TABLE pt_domain WITH KEY domname = pv_domname domvalue_l = pv_canc INTO ls_domain.
+  pv_canct = ls_domain-ddtext.
+
+ENDFORM.
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& Form get_food_category</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& text</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*&      --&gt; PS_STR_FCATG</font>
+<font color ="#0000FF">*&      --&gt; PT_DOMAIN</font>
+<font color ="#0000FF">*&      --&gt; P_</font>
+<font color ="#0000FF">*&      &lt;-- PS_STR_FCATGT</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+FORM get_food_category  USING    VALUE(pv_fcatg)
+                                 VALUE(pt_domain) TYPE dd07v_t
+                                 VALUE(pv_domname)
+                        CHANGING pv_fcatgt.
+  DATA ls_domain TYPE dd07v.
+  READ TABLE pt_domain WITH KEY domname = pv_domname domvalue_l = pv_fcatg INTO ls_domain.
+  pv_fcatgt = ls_domain-ddtext.
+ENDFORM.
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& Form get_food_del</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& text</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*&      --&gt; PS_STR_STDEL</font>
+<font color ="#0000FF">*&      --&gt; PT_DOMAIN</font>
+<font color ="#0000FF">*&      --&gt; P_</font>
+<font color ="#0000FF">*&      &lt;-- PS_STR_STDELT</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+FORM get_food_del  USING    VALUE(pv_stdel)
+                            VALUE(pt_domain) TYPE dd07v_t
+                            VALUE(pv_domname)
+                   CHANGING pv_stdelt.
+  DATA ls_domain TYPE dd07v.
+  READ TABLE pt_domain WITH KEY domname = pv_domname domvalue_l = pv_stdel INTO ls_domain.
+  pv_stdelt = ls_domain-ddtext.
+ENDFORM.
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& Form get_stway_text</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& text</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*&      --&gt; PS_STR_STWAY</font>
+<font color ="#0000FF">*&      --&gt; PT_DOMAIN</font>
+<font color ="#0000FF">*&      --&gt; P_</font>
+<font color ="#0000FF">*&      &lt;-- PS_STR_STWAYT</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+FORM get_stway_text  USING    VALUE(pv_stway)
+                              VALUE(pt_domain) TYPE dd07v_t
+                              VALUE(pv_domname)
+                     CHANGING pv_stwayt.
+  DATA ls_domain TYPE dd07v.
+  READ TABLE pt_domain WITH KEY domname = pv_domname domvalue_l = pv_stway INTO ls_domain.
+  pv_stwayt = ls_domain-ddtext.
+ENDFORM.
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& Form get_appsta</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& text</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*&      --&gt; PS_STR_ORDID</font>
+<font color ="#0000FF">*&      &lt;-- PS_STR_APPSTA</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+FORM get_appsta  USING    VALUE(pv_ordid)
+                 CHANGING pv_appsta.
+  SELECT SINGLE appsta
+    FROM ztassfi0201
+    INTO pv_appsta
+   WHERE codoc = pv_ordid.
+ENDFORM.
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& Form get_rstat_light</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& text</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*&      --&gt; PS_LIST_RSTAT</font>
+<font color ="#0000FF">*&      &lt;-- PS_LIST_LIGHT</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+FORM get_rstat_light  USING    VALUE(pv_rstat)
+                      CHANGING pv_light.
+  CASE pv_rstat.
+    WHEN 'A'.
+      pv_light = 1.         "##
+    WHEN 'B'.
+      pv_light = 3.         "##
+    WHEN 'C'.
+      pv_light = 2.         "##
+  ENDCASE.
+ENDFORM.
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& Form handle_toolbar_button</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& text</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*&      --&gt; E_OBJECT</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+FORM handle_toolbar_button  USING    po_object TYPE REF TO cl_alv_event_toolbar_set.
+  DATA ls_toolbar TYPE stb_button.
+
+  CLEAR ls_toolbar.
+  ls_toolbar-text = '## ## ##'.
+  ls_toolbar-icon = icon_detail.
+  ls_toolbar-butn_type = 0.
+  ls_toolbar-function = 'DETAIL'.
+  APPEND ls_toolbar TO po_object-&gt;mt_toolbar.
+ENDFORM.
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& Form handle_user_command</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& text</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*&      --&gt; E_UCOMM</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+FORM handle_user_command  USING    pv_ucomm.
+  IF pv_ucomm = 'DETAIL'.
+    " ## ## ALV# ## ##
+    PERFORM get_alv_info_02 USING gt_list
+                            CHANGING gt_list2
+                                     gs_list2
+                                     gs_list
+                                     gt_rows
+                                     gs_rows
+                                     gv_subrc
+                                     gv_subrc2.
+    PERFORM display_alv_02.
+  ELSEIF pv_ucomm = 'CREATE'.
+    " ALV## ### # ##
+    PERFORM get_selected_rows_03 CHANGING gt_rows
+                                          gv_subrc.
+    IF gv_subrc = 2.  "1## ##
+      READ TABLE gt_rows INDEX 1 INTO gs_rows.
+      READ TABLE gt_list3 INDEX gs_rows-index INTO gs_list3.
+      " ## ### 0# ## ## ###
+      IF gs_list3-reamt = 0.
+        MESSAGE i011(zmcassmm04).     "##### 0# ### ## ### #### # ####
+        RETURN.
+      ENDIF.
+      " ## ## ##
+      PERFORM set_default_data_create_item USING gs_list3
+                                           CHANGING zsassmm0412.
+      gv_subrc2 = 8.
+      CALL SCREEN 0211 STARTING AT 40 5.
+      IF gv_subrc2 = 10.        " #### ### ##
+        CLEAR gv_subrc2.
+        LEAVE TO SCREEN 0.
+      ENDIF.
+    ELSE.
+      RETURN.
+    ENDIF.
+  ENDIF.
+ENDFORM.
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& Form handle_button_click</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& text</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*&      --&gt; ES_COL_ID</font>
+<font color ="#0000FF">*&      --&gt; ES_ROW_NO</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+FORM handle_button_click  USING    pv_col TYPE lvc_s_col
+                                   pv_row TYPE lvc_s_roid
+                                   pt_list TYPE zsassmm0402_t
+                                   pt_domain TYPE dd07v_t.
+  DATA ls_list LIKE LINE OF pt_list.
+  READ TABLE pt_list INDEX pv_row-row_id INTO ls_list.
+
+  SELECT SINGLE appno rdate rpsn rtime chby chdate chtime
+         adead adate atime appsta codoc appty
+    FROM ztassfi0201
+    INTO CORRESPONDING FIELDS OF zsassmm0418
+   WHERE appno = ls_list-appno.
+
+  " ## ## Text
+  PERFORM get_submit_text USING ls_list-appsta
+                                pt_domain
+                                'ZDASS_APPSTA'
+                          CHANGING zsassmm0418-appstat.
+
+  CALL SCREEN 0160 STARTING AT 10 10.
+ENDFORM.
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& Form handle_toolbar_button_02</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& text</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*&      --&gt; E_OBJECT</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+FORM handle_toolbar_button_02  USING    po_object TYPE REF TO cl_alv_event_toolbar_set.
+  DATA ls_toolbar TYPE stb_button.
+
+  CLEAR ls_toolbar.
+  ls_toolbar-text = '## ##'.
+  ls_toolbar-icon = icon_create.
+  ls_toolbar-butn_type = 0.
+  ls_toolbar-function = 'CREATE'.
+  APPEND ls_toolbar TO po_object-&gt;mt_toolbar.
+ENDFORM.
+</pre>
+<hr>
+<font size="2" face = "Sans Serif">Extracted by Direct Download Enterprise version 1.3.1 - E.G.Mellodew. 1998-2005 UK. Sap Release 754
+</font>
+</body>
+</html>

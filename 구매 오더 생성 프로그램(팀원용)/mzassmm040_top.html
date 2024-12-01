@@ -1,0 +1,138 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<html>
+<head>
+<title>MZASSMM040_TOP</title>
+</head>
+<body bgcolor="#FFFFE0">
+<font size="3" face = "Arial" color="#000000"><b>Code listing for: MZASSMM040_TOP</b></font>
+<br>
+<font size="3" face = "Arial" color="#000000"><b>Description:  Include MZASSMM040_TOP</b></font>
+<hr>
+<pre width="100">
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& Include MZASSMM040_TOP                           - Module Pool      SAPMZASSMM040</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+PROGRAM sapmzassmm040.
+
+DATA: ok_code   TYPE sy-ucomm,
+      gv_subrc  TYPE sy-subrc,
+      gv_subrc2 TYPE sy-subrc,
+      gv_subrc3 LIKE gv_subrc.
+
+" Screen 100 Condition
+TABLES zsassmm0401.
+DATA: gs_con TYPE zsassmm0401,
+      gt_con TYPE zsassmm0401_t.
+
+" ## ## ##
+TABLES zsassmm0402.
+
+" ## ## ## ##
+TABLES zsassmm0404.
+
+" ### ## ##
+TABLES zsassmm0405.
+
+" ### ## ##
+TABLES zsassmm0406.
+
+" ## ## ##
+TABLES zsassmm0407.
+
+" ## ## ##
+TABLES zsassmm0408.
+
+" ## ## ## ##
+TABLES zsassmm0410.
+
+" ## ## ## ##
+TABLES zsassmm0412.
+
+" ## ## ##
+TABLES zsassmm0418.
+
+" Tabstrip
+CONTROLS: tab TYPE TABSTRIP.
+DATA gv_dynnr TYPE sy-dynnr.
+
+" ALV ##
+DATA: go_con   TYPE REF TO cl_gui_custom_container,
+      go_con2  TYPE REF TO cl_gui_custom_container,
+      go_con3  TYPE REF TO cl_gui_custom_container,
+      go_alv   TYPE REF TO cl_gui_alv_grid,
+      go_alv2  TYPE REF TO cl_gui_alv_grid,
+      go_alv3  TYPE REF TO cl_gui_alv_grid,
+      gs_layo  TYPE lvc_s_layo,
+      gs_layo2 TYPE lvc_s_layo,
+      gs_layo3 TYPE lvc_s_layo,
+      gt_sort  TYPE lvc_t_sort,
+      gs_sort  LIKE LINE OF gt_sort,
+      gt_sort2 LIKE gt_sort,
+      gs_sort2 LIKE LINE OF gt_sort2,
+      gt_sort3 LIKE gt_sort,
+      gs_sort3 LIKE LINE OF gt_sort3,
+      gt_fcat  TYPE lvc_t_fcat,
+      gs_fcat  LIKE LINE OF gt_fcat,
+      gt_fcat2 LIKE gt_fcat,
+      gs_fcat2 LIKE LINE OF gt_fcat,
+      gt_fcat3 LIKE gt_fcat,
+      gs_fcat3 LIKE LINE OF gt_fcat3.
+
+" ## ## ALV
+DATA: gs_list TYPE zsassmm0402,
+      gt_list LIKE TABLE OF gs_list.
+" ## ## ALV
+DATA: gs_list2 TYPE zsassmm0403,
+      gt_list2 LIKE TABLE OF gs_list2.
+" ## ## ALV
+DATA: gt_list3 TYPE zsassmm0411_t,
+      gs_list3 TYPE zsassmm0411.
+
+" Condition Range
+DATA: gt_ord TYPE RANGE OF ztassmm0201-ordat,
+      gt_bpd TYPE RANGE OF ztassmm0201-bpid.
+
+" Get domain value
+DATA: gt_domain TYPE dd07v_t,
+      gs_domain TYPE dd07v.
+
+" Selected Rows
+DATA: gt_rows TYPE lvc_t_row,
+      gs_rows TYPE lvc_s_row.
+
+" Screen Move save data
+DATA: gt_move1 LIKE gt_list,
+      gt_move2 LIKE gt_list2,
+      gs_move  LIKE gs_con,
+      gv_move  TYPE zsassmm0403-ordid.
+
+" Event - Double Click
+CLASS lcl_handler DEFINITION.
+  PUBLIC SECTION.
+    METHODS on_double_click FOR EVENT double_click OF cl_gui_alv_grid
+      IMPORTING e_row e_column .
+
+ENDCLASS.
+DATA go_handler TYPE REF TO lcl_handler.
+"Event - ALV Toolbar
+CLASS lcl_event_receiver DEFINITION.
+  PUBLIC SECTION.
+    METHODS toolbar_button FOR EVENT toolbar OF cl_gui_alv_grid
+      IMPORTING e_object e_interactive.
+
+    METHODS toolbar_button_02 FOR EVENT toolbar OF cl_gui_alv_grid
+      IMPORTING e_object.
+
+    METHODS handle_user_command FOR EVENT user_command OF cl_gui_alv_grid
+      IMPORTING e_ucomm.
+    "Event - Button Click
+    METHODS button_click FOR EVENT button_click OF cl_gui_alv_grid
+      IMPORTING es_col_id es_row_no.
+ENDCLASS.
+DATA go_receiver TYPE REF TO lcl_event_receiver.
+</pre>
+<hr>
+<font size="2" face = "Sans Serif">Extracted by Direct Download Enterprise version 1.3.1 - E.G.Mellodew. 1998-2005 UK. Sap Release 754
+</font>
+</body>
+</html>

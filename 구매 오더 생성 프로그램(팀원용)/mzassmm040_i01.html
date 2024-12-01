@@ -1,0 +1,468 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<html>
+<head>
+<title>MZASSMM040_I01</title>
+</head>
+<body bgcolor="#FFFFE0">
+<font size="3" face = "Arial" color="#000000"><b>Code listing for: MZASSMM040_I01</b></font>
+<br>
+<font size="3" face = "Arial" color="#000000"><b>Description:  Include MZASSMM040_I01</b></font>
+<hr>
+<pre width="100">
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& Include          MZASSMM040_I01</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*&      Module  EXIT  INPUT</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*       text</font>
+<font color ="#0000FF">*----------------------------------------------------------------------*</font>
+MODULE exit INPUT.
+  CASE ok_code.
+    WHEN 'EIXT' OR 'CANC'.
+      PERFORM call_message USING TEXT-c08
+                           CHANGING gv_subrc.      "### #### #####. ### #######?
+      IF gv_subrc = 2.      "Yes
+        " # # ## ## ### ###
+        PERFORM recall_data USING gt_move1
+                                  gt_move2
+                            CHANGING gt_list
+                                     gt_list2.
+        LEAVE TO SCREEN 0.
+      ELSEIF gv_subrc = 4.  "No
+        RETURN.
+      ENDIF.
+  ENDCASE.
+ENDMODULE.
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*&      Module  USER_COMMAND_0100  INPUT</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*       text</font>
+<font color ="#0000FF">*----------------------------------------------------------------------*</font>
+MODULE user_command_0100 INPUT.
+  CASE ok_code.
+    WHEN 'ENTER'.
+
+    WHEN 'BACK'.
+      LEAVE TO SCREEN 0.
+    WHEN 'SEARCH'.                  "## ## ## ##
+      CLEAR gt_list2.
+      " ####
+      PERFORM search_condition USING zsassmm0401
+                               CHANGING gv_subrc.
+      IF gv_subrc &lt;&gt; 0.     " ## ### #### ###
+        RETURN.
+      ENDIF.
+      " ## ## ALV# ## ##
+      PERFORM get_alv_info_01 USING zsassmm0401
+                              CHANGING gt_list
+                                       gs_list
+                                       gt_domain
+                                       gs_domain.
+    WHEN 'CREATE'.                  "## ## ## ##
+      " ### ####
+      PERFORM data_temp_save USING gt_list
+                                   gt_list2
+                             CHANGING gt_move1
+                                      gt_move2 .
+      CLEAR: zsassmm0402, gt_list, gt_list2.
+      "#### ###
+      PERFORM set_create_default CHANGING zsassmm0402.
+      CALL SCREEN 0200.
+    WHEN 'EDIT'.  "## ## ## ##
+      "#### ###
+      PERFORM set_edit_default USING gt_list
+                                     gs_list
+                               CHANGING zsassmm0402
+                                        gt_list2
+                                        gs_list2
+                                        gt_rows
+                                        gs_rows
+                                        gv_subrc
+                                        gt_domain
+                                        gs_domain.
+      IF gv_subrc &lt;&gt; 2.   " 1## #### ####
+        RETURN.
+      ENDIF.
+      " ### ####
+      PERFORM data_temp_save USING gt_list
+                                   gt_list2
+                             CHANGING gt_move1
+                                      gt_move2.
+      " ## ## ##
+      PERFORM payment_sum CHANGING zsassmm0402
+                                   gt_list2.
+      CLEAR: gt_list.
+      CALL SCREEN 0300.
+    WHEN 'DETAIL'.  "###/### ## ##
+      " ###/### ## ## ##
+      PERFORM get_detail_button_info USING gt_list
+                                     CHANGING zsassmm0404
+                                              gs_list
+                                              gt_rows
+                                              gs_rows
+                                              gv_subrc
+                                              gt_domain
+                                              gs_domain.
+      IF gv_subrc &lt;&gt; 2.   "1## #### ## ## ## ## ####
+        RETURN.
+      ENDIF.
+      " ## ## ALV# ## ##
+      PERFORM get_alv_info_02 USING gt_list
+                              CHANGING gt_list2
+                                       gs_list2
+                                       gs_list
+                                       gt_rows
+                                       gs_rows
+                                       gv_subrc
+                                       gv_subrc2.
+      CALL SCREEN 0400.
+    WHEN 'DELETE'.
+      PERFORM set_edit_default USING gt_list
+                                     gs_list
+                               CHANGING zsassmm0402
+                                        gt_list2
+                                        gs_list2
+                                        gt_rows
+                                        gs_rows
+                                        gv_subrc
+                                        gt_domain
+                                        gs_domain.
+      IF gv_subrc &lt;&gt; 2.   " 1## #### ####
+        RETURN.
+      ENDIF.
+      CALL SCREEN 0500.
+  ENDCASE.
+ENDMODULE.
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*&      Module  USER_COMMAND_0120  INPUT</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*       text</font>
+<font color ="#0000FF">*----------------------------------------------------------------------*</font>
+MODULE user_command_0120 INPUT.
+  IF ok_code = 'CANCEL'.
+    IF sy-dynnr = '0110'.
+      PERFORM clear_pop_up_screen CHANGING zsassmm0404.
+    ELSEIF sy-dynnr = '0120'.
+      PERFORM clear_pop_up_screen CHANGING zsassmm0405.
+    ELSEIF sy-dynnr = '0130'.
+      PERFORM clear_pop_up_screen CHANGING zsassmm0406.
+    ELSEIF sy-dynnr = '0140'.
+      PERFORM clear_pop_up_screen CHANGING zsassmm0407.
+    ELSEIF sy-dynnr = '0150'.
+      PERFORM clear_pop_up_screen CHANGING zsassmm0408.
+    ENDIF.
+<font color ="#0000FF">*    CLEAR: zsassmm0404, zsassmm0405, zsassmm0406, zsassmm0407, zsassmm0408.</font>
+    LEAVE TO SCREEN 0.
+  ENDIF.
+ENDMODULE.
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*&      Module  USER_COMMAND_0200  INPUT</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*       text</font>
+<font color ="#0000FF">*----------------------------------------------------------------------*</font>
+MODULE user_command_0200 INPUT.
+  CASE ok_code.
+    WHEN 'BACK'.
+      PERFORM call_message USING TEXT-c08
+                           CHANGING gv_subrc.      "### #### #####. ### #######?
+      IF gv_subrc = 2.      "Yes
+        " # # ## ## ### ###
+        PERFORM recall_data USING gt_move1
+                                  gt_move2
+                            CHANGING gt_list
+                                     gt_list2.
+        LEAVE TO SCREEN 0.
+      ELSEIF gv_subrc = 4.  "No
+        RETURN.
+      ENDIF.
+    WHEN 'ENTER'.
+
+    WHEN 'SAVE'.           "## ## ##
+      " ## ## ##
+      PERFORM check_condition USING gt_list2
+                                    zsassmm0402
+                                    gv_subrc.
+      IF gv_subrc = 2.
+        RETURN.
+      ENDIF.
+      " DB #### ## ##
+      PERFORM upload_data CHANGING gt_list2
+                                   gs_list2
+                                   zsassmm0402
+                                   gv_subrc
+                                   gt_domain
+                                   gs_domain
+                                   gt_list.
+      IF gv_subrc = 4.                "#### ##### ### ##
+        CLEAR gv_subrc.
+        MESSAGE s027(zmcassmm04).     "### ### ##
+        COMMIT WORK.
+        LEAVE TO SCREEN 0.
+      ENDIF.
+    WHEN 'SUBMIT'.                " ## ##
+      IF zsassmm0402-rstat = 'B'.
+        MESSAGE i031(zmcassmm04).               "## ### #####.
+        RETURN.
+      ENDIF.
+      PERFORM call_message USING TEXT-c10
+                           CHANGING gv_subrc.                  "########?
+      IF gv_subrc = 2.
+        " Yes
+        CLEAR gv_subrc.
+        " #### ##
+        PERFORM creat_appno CHANGING zsassmm0402
+                                     gv_subrc
+                                     gt_domain.
+        IF gv_subrc = 4.    "## ##
+          " DB #### ## ##
+          PERFORM upload_data CHANGING gt_list2
+                                       gs_list2
+                                       zsassmm0402
+                                       gv_subrc
+                                       gt_domain
+                                       gs_domain
+                                       gt_list.
+          IF gv_subrc = 4.                "#### ##### ### ##
+            CLEAR gv_subrc.
+            MESSAGE s036(zmcassmm04).     "## ##
+            COMMIT WORK.
+            LEAVE TO SCREEN 0.
+          ENDIF.
+        ENDIF.
+
+      ELSEIF gv_subrc = 4.                                                    " No
+        RETURN.
+      ENDIF.
+    WHEN 'B_ADD'.     " ## ## ## ##
+      IF zsassmm0402-rstat = 'B'.
+        MESSAGE i033(zmcassmm04).               "## ### #####. ###### ## ### ######.
+        RETURN.
+      ELSEIF zsassmm0402-bpid IS INITIAL OR zsassmm0402-htext IS INITIAL.
+        MESSAGE i020(zmcassmm04).   "### ##, ### ## ######.
+        RETURN.
+      ELSEIF zsassmm0402-bpid IS INITIAL.
+        MESSAGE i021(zmcassmm04).   "### ######.
+        RETURN.
+      ELSEIF zsassmm0402-htext IS INITIAL.
+        MESSAGE i022(zmcassmm04).   "### ### ######.
+        RETURN.
+      ENDIF.
+      CLEAR gt_list3.
+      zsassmm0410-plmon = sy-datum(6).
+      IF sy-dynnr = '0200'.
+        gv_subrc3 = 2.          "## #### ##
+      ELSEIF sy-dynnr = '0300'.
+        gv_subrc3 = 4.          "## #### ##
+        gv_move = zsassmm0402-ordid.
+      ENDIF.
+      CALL SCREEN 0210 STARTING AT 35 3.
+    WHEN 'B_EDIT'.    "## ## ##
+      IF zsassmm0402-rstat = 'B'.
+        MESSAGE i030(zmcassmm04).               "## ### #####. ###### ## ### ######.
+        RETURN.
+      ENDIF.
+      PERFORM get_selected_rows_02 CHANGING gt_rows
+                                            gv_subrc.
+      IF gv_subrc = 2.    " 1## ##
+        READ TABLE gt_rows INDEX 1 INTO gs_rows.
+        READ TABLE gt_list2 INDEX gs_rows-index INTO gs_list2.
+        IF gs_list2-canc = 'X'.
+          MESSAGE i000(zmcassmm04).       "### ## ### ### # ####.
+        ENDIF.
+        " ## ## ##
+        PERFORM set_default_data_edit_item USING gs_list2
+                                                 gt_list2
+                                           CHANGING zsassmm0412.
+        gv_subrc2 = 6.
+        CALL SCREEN 0211 STARTING AT 40 5.
+      ELSE.
+        RETURN.
+      ENDIF.
+    WHEN 'B_DEL'.     "## ## ##
+      IF zsassmm0402-rstat = 'B'.
+        MESSAGE i032(zmcassmm04).               "## ### #####. ###### ## ### ######.
+        RETURN.
+      ENDIF.
+      PERFORM get_selected_rows_02 CHANGING gt_rows
+                                            gv_subrc.
+      IF gv_subrc = 2.  " 1## ##
+        READ TABLE gt_rows INDEX 1 INTO gs_rows.
+        READ TABLE gt_list2 INDEX gs_rows-index INTO gs_list2.
+        IF gs_list2-canc = 'X'.
+          MESSAGE i025(zmcassmm04).     "## ### #####.
+          RETURN.
+        ENDIF.
+        PERFORM call_message USING TEXT-c05
+                             CHANGING gv_subrc2. "## ########?
+        IF gv_subrc2 = 2.  "Yes
+          CLEAR gv_subrc2.
+          READ TABLE gt_list2 WITH KEY ordno = gs_list2-ordno INTO gs_list2.
+          gs_list2-canc = 'X'.
+          MODIFY gt_list2 FROM gs_list2 INDEX sy-tabix.
+          " ## ## ##
+          PERFORM payment_sum CHANGING zsassmm0402
+                                       gt_list2.
+        ELSEIF gv_subrc2 = 4.  "No
+          CLEAR gv_subrc2.
+          RETURN.
+        ENDIF.
+      ELSE.  " ## # ##
+        RETURN.
+      ENDIF.
+  ENDCASE.
+ENDMODULE.
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*&      Module  USER_COMMAND_0210  INPUT</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*       text</font>
+<font color ="#0000FF">*----------------------------------------------------------------------*</font>
+MODULE user_command_0210 INPUT.
+  CASE ok_code.
+    WHEN 'CANCEL'.
+      LEAVE TO SCREEN 0.
+    WHEN 'B_SEARCH'.          "## ##
+      " ### ## ## ##
+      PERFORM get_month_plan USING zsassmm0410
+                             CHANGING gt_list3
+                                      gs_list3
+                                      gt_list2
+                                      gs_list2.
+    WHEN 'B_CREATE'.
+
+  ENDCASE.
+ENDMODULE.
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*&      Module  USER_COMMAND_0211  INPUT</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*       text</font>
+<font color ="#0000FF">*----------------------------------------------------------------------*</font>
+MODULE user_command_0211 INPUT.
+  CASE ok_code.
+    WHEN 'ENTER'.
+      " ## ## ## ## - ## ##, #### ##, #### ##, ## ### ##
+      PERFORM add_item_condition CHANGING zsassmm0412
+                                          gv_subrc.
+    WHEN 'ADD'.
+      " ## ## ## ## - ## ##, #### ##, #### ##, ## ### ##
+      PERFORM add_item_condition CHANGING zsassmm0412
+                                          gv_subrc.
+      IF gv_subrc = 4.    "## ### #### #
+        " ### ## ## ##
+        PERFORM append_order USING zsassmm0412
+                             CHANGING gt_list2
+                                      gs_list2
+                                      gv_subrc2
+                                      gv_subrc3
+                                      gv_move.
+        CLEAR: gv_subrc, gv_subrc2, gs_list2.
+        " ## ## ##
+        PERFORM payment_sum CHANGING zsassmm0402
+                                     gt_list2.
+        gv_subrc2 = 10.       " #### ### ##
+        LEAVE TO SCREEN 0.
+      ENDIF.
+    WHEN 'CANCEL'.
+      LEAVE TO SCREEN 0.
+  ENDCASE.
+ENDMODULE.
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*&      Module  USER_COMMAND_0400  INPUT</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*       text</font>
+<font color ="#0000FF">*----------------------------------------------------------------------*</font>
+MODULE user_command_0400 INPUT.
+  tab-activetab = ok_code.
+
+  CASE ok_code .
+    WHEN 'BACK'.
+      LEAVE TO SCREEN 0.
+
+    WHEN 'RESUBMIT'.              " ## ## ##
+      IF zsassmm0404-canc = 'X'.
+        MESSAGE i025(zmcassmm04).       "## ### #####.
+        RETURN.
+      ENDIF.
+      IF zsassmm0404-picid &lt;&gt; sy-uname.
+        MESSAGE i063(zmcassmm04).       "### ### #### ## ### #####.
+        RETURN.
+      ENDIF.
+      CASE zsassmm0404-appsta.
+        WHEN 'A'.
+          PERFORM call_message USING TEXT-c11
+                               CHANGING gv_subrc.                  "## ########?
+          IF gv_subrc = 2.
+            CLEAR gv_subrc.
+            " ## ##
+            PERFORM resubmit CHANGING zsassmm0404
+                                      gt_domain
+                                      gs_domain
+                                      gt_list
+                                      gs_list.
+          ELSEIF gv_subrc = 4.
+            CLEAR gv_subrc.
+            RETURN.
+          ENDIF.
+        WHEN 'B'.
+          MESSAGE i058(zmcassmm04).           " ## #### ### #### # ####.
+          RETURN.
+        WHEN 'C'.
+          MESSAGE i059(zmcassmm04).           " ## ### #####.
+          RETURN.
+        WHEN 'D'.
+          MESSAGE i060(zmcassmm04).           " ### #####.
+          RETURN.
+        WHEN 'E'.
+          MESSAGE i061(zmcassmm04).           " ## ### ### #### # ####.
+          RETURN.
+        WHEN ''.
+          MESSAGE i034(zmcassmm04).           "## #### ## #####.
+          RETURN.
+      ENDCASE.
+  ENDCASE.
+ENDMODULE.
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*&      Module  USER_COMMAND_0500  INPUT</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*       text</font>
+<font color ="#0000FF">*----------------------------------------------------------------------*</font>
+MODULE user_command_0500 INPUT.
+  CASE ok_code.
+    WHEN 'BACK'.
+      LEAVE TO SCREEN 0.
+    WHEN 'DELETE'.
+      PERFORM call_message USING TEXT-c09
+                           CHANGING gv_subrc.      "# ##### ## ########?
+      IF gv_subrc = 2. "Yes
+        CLEAR gt_list.
+        " ## ## ## # DB ####
+        PERFORM delete_order CHANGING zsassmm0402
+                                      gt_list.
+        gs_list2-ordid = zsassmm0402-ordid.
+        " ## ## ALV ## ## ##
+        PERFORM get_main_info_alv_02 CHANGING gt_list2
+                                              gs_list2.
+        " ####, ##, #####, ####, ####, ###, ### ##
+        PERFORM get_add_info_alv_02 CHANGING gt_list2
+                                             gs_list2.
+        LEAVE TO SCREEN 0.
+      ELSEIF gv_subrc = 4.    "No
+        RETURN.
+      ENDIF.
+  ENDCASE.
+ENDMODULE.
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& Module STATUS_0160 OUTPUT</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*&</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+MODULE status_0160 OUTPUT.
+ SET PF-STATUS 'S160'.
+ SET TITLEBAR 'T160'.
+ENDMODULE.
+</pre>
+<hr>
+<font size="2" face = "Sans Serif">Extracted by Direct Download Enterprise version 1.3.1 - E.G.Mellodew. 1998-2005 UK. Sap Release 754
+</font>
+</body>
+</html>
