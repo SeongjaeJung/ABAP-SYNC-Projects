@@ -1,0 +1,60 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<html>
+<head>
+<title>MZASSMM041_TOP</title>
+</head>
+<body bgcolor="#FFFFE0">
+<font size="3" face = "Arial" color="#000000"><b>Code listing for: MZASSMM041_TOP</b></font>
+<br>
+<font size="3" face = "Arial" color="#000000"><b>Description:  Include MZASSMM041_TOP</b></font>
+<hr>
+<pre width="100">
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& Include MZASSMM041_TOP                           - Module Pool      SAPMZASSMM041</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+PROGRAM sapmzassmm041.
+
+DATA: ok_code  TYPE sy-ucomm,
+      gv_subrc TYPE sy-subrc.
+
+TYPES node_table_type TYPE STANDARD TABLE OF mtreesnode.
+
+DATA: gt_data TYPE TABLE OF zsassmm0422,
+      gs_data LIKE LINE OF gt_data.
+
+DATA gv_flag TYPE c LENGTH 1.
+
+" Tree ##
+DATA: go_tree TYPE REF TO cl_gui_simple_tree,
+      go_con  TYPE REF TO cl_gui_custom_container,
+      gt_node TYPE node_table_type.
+
+
+" ALV ##
+DATA: go_con2 TYPE REF TO cl_gui_custom_container,
+      go_alv  TYPE REF TO cl_gui_alv_grid,
+      gs_layo TYPE lvc_s_layo,
+      gt_fcat TYPE lvc_t_fcat,
+      gs_fcat LIKE LINE OF gt_fcat,
+      gt_sort TYPE lvc_t_sort,
+      gs_sort LIKE LINE OF gt_sort.
+
+
+
+DATA gs_tree_header TYPE treev_hhdr.
+
+CLASS lcl_handler DEFINITION.
+  PUBLIC SECTION.
+    METHODS on_node_double_click FOR EVENT node_double_click
+      OF cl_gui_simple_tree
+      IMPORTING node_key.
+
+ENDCLASS.
+
+DATA go_handler TYPE REF TO lcl_handler.
+</pre>
+<hr>
+<font size="2" face = "Sans Serif">Extracted by Direct Download Enterprise version 1.3.1 - E.G.Mellodew. 1998-2005 UK. Sap Release 754
+</font>
+</body>
+</html>

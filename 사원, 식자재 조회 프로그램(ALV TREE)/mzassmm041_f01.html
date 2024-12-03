@@ -1,0 +1,989 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<html>
+<head>
+<title>MZASSMM041_F01</title>
+</head>
+<body bgcolor="#FFFFE0">
+<font size="3" face = "Arial" color="#000000"><b>Code listing for: MZASSMM041_F01</b></font>
+<br>
+<font size="3" face = "Arial" color="#000000"><b>Description:  Include MZASSMM041_F01</b></font>
+<hr>
+<pre width="100">
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& Include          MZASSMM041_F01</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& Form create_alv_tree</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& text</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& --&gt;  p1        text</font>
+<font color ="#0000FF">*& &lt;--  p2        text</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+FORM create_alv_tree .
+  DATA: lt_event TYPE cntl_simple_events,
+        ls_event TYPE cntl_simple_event.
+  CREATE OBJECT go_con
+    EXPORTING
+      container_name              = 'TREE1'
+    EXCEPTIONS
+      cntl_error                  = 1
+      cntl_system_error           = 2
+      create_error                = 3
+      lifetime_error              = 4
+      lifetime_dynpro_dynpro_link = 5
+      OTHERS                      = 6.
+  IF sy-subrc &lt;&gt; 0.
+<font color ="#0000FF">*   MESSAGE ID SY-MSGID TYPE SY-MSGTY NUMBER SY-MSGNO</font>
+<font color ="#0000FF">*              WITH SY-MSGV1 SY-MSGV2 SY-MSGV3 SY-MSGV4.</font>
+  ENDIF.
+
+  CREATE OBJECT go_tree
+    EXPORTING
+      parent                      = go_con
+      node_selection_mode         = cl_gui_simple_tree=&gt;node_sel_mode_single
+    EXCEPTIONS
+      lifetime_error              = 1
+      cntl_system_error           = 2
+      create_error                = 3
+      failed                      = 4
+      illegal_node_selection_mode = 5
+      OTHERS                      = 6.
+  IF sy-subrc &lt;&gt; 0.
+<font color ="#0000FF">*  MESSAGE ID SY-MSGID TYPE SY-MSGTY NUMBER SY-MSGNO</font>
+<font color ="#0000FF">*             WITH SY-MSGV1 SY-MSGV2 SY-MSGV3 SY-MSGV4.</font>
+  ENDIF.
+
+  PERFORM create_node_table CHANGING gt_node.
+
+  CREATE OBJECT go_handler.
+  ls_event-eventid = cl_gui_simple_tree=&gt;eventid_node_double_click.
+  ls_event-appl_event = 'X'.
+  APPEND ls_event TO lt_event.
+
+  CALL METHOD go_tree-&gt;set_registered_events
+    EXPORTING
+      events                    = lt_event
+    EXCEPTIONS
+      cntl_error                = 1
+      cntl_system_error         = 2
+      illegal_event_combination = 3
+      OTHERS                    = 4.
+  IF sy-subrc &lt;&gt; 0.
+<font color ="#0000FF">*   Implement suitable error handling here</font>
+  ENDIF.
+
+  SET HANDLER go_handler-&gt;on_node_double_click FOR go_tree.
+ENDFORM.
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& Form display_alv_tree</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& text</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& --&gt;  p1        text</font>
+<font color ="#0000FF">*& &lt;--  p2        text</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+FORM display_alv_tree .
+
+  CALL METHOD go_tree-&gt;delete_all_nodes
+    EXCEPTIONS
+      failed            = 1
+      cntl_system_error = 2
+      OTHERS            = 3.
+  IF sy-subrc &lt;&gt; 0.
+<font color ="#0000FF">*   Implement suitable error handling here</font>
+  ENDIF.
+
+  CALL METHOD go_tree-&gt;add_nodes
+    EXPORTING
+      table_structure_name = 'MTREESNODE'
+      node_table           = gt_node.
+  IF sy-subrc &lt;&gt; 0.
+<font color ="#0000FF">*   Implement suitable error handling here</font>
+  ENDIF.
+
+  PERFORM tree_event.
+ENDFORM.
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& Form set_alv</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& text</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& --&gt;  p1        text</font>
+<font color ="#0000FF">*& &lt;--  p2        text</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+FORM set_alv .
+  CREATE OBJECT go_con2
+    EXPORTING
+      container_name              = 'ALV1'
+    EXCEPTIONS
+      cntl_error                  = 1
+      cntl_system_error           = 2
+      create_error                = 3
+      lifetime_error              = 4
+      lifetime_dynpro_dynpro_link = 5
+      OTHERS                      = 6.
+  IF sy-subrc &lt;&gt; 0.
+<font color ="#0000FF">*   MESSAGE ID SY-MSGID TYPE SY-MSGTY NUMBER SY-MSGNO</font>
+<font color ="#0000FF">*              WITH SY-MSGV1 SY-MSGV2 SY-MSGV3 SY-MSGV4.</font>
+  ENDIF.
+
+  CREATE OBJECT go_alv
+    EXPORTING
+      i_parent          = go_con2
+    EXCEPTIONS
+      error_cntl_create = 1
+      error_cntl_init   = 2
+      error_cntl_link   = 3
+      error_dp_create   = 4
+      OTHERS            = 5.
+  IF sy-subrc &lt;&gt; 0.
+<font color ="#0000FF">*   MESSAGE ID SY-MSGID TYPE SY-MSGTY NUMBER SY-MSGNO</font>
+<font color ="#0000FF">*              WITH SY-MSGV1 SY-MSGV2 SY-MSGV3 SY-MSGV4.</font>
+  ENDIF.
+
+ENDFORM.
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& Form display_alv</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& text</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& --&gt;  p1        text</font>
+<font color ="#0000FF">*& &lt;--  p2        text</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+FORM display_alv .
+  PERFORM set_layout.
+  IF gv_flag = 'F'.
+    PERFORM set_fieldcatalog.
+    PERFORM set_sort.
+  ELSEIF gv_flag = 'E'.
+    PERFORM set_fieldcatalog_02.
+    PERFORM set_sort_02.
+  ELSEIF gv_flag = 'S'.
+    PERFORM set_fieldcatalog.
+    PERFORM set_sort_03.
+  ENDIF.
+
+  CALL METHOD go_alv-&gt;set_table_for_first_display
+    EXPORTING
+<font color ="#0000FF">*     i_structure_name              = 'ZSASSST0001'</font>
+      is_layout                     = gs_layo
+    CHANGING
+      it_outtab                     = gt_data
+      it_fieldcatalog               = gt_fcat
+      it_sort                       = gt_sort
+    EXCEPTIONS
+      invalid_parameter_combination = 1
+      program_error                 = 2
+      too_many_lines                = 3
+      OTHERS                        = 4.
+  IF sy-subrc &lt;&gt; 0.
+<font color ="#0000FF">* Implement suitable error handling here</font>
+  ENDIF.
+
+
+ENDFORM.
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& Form set_layout</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& text</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& --&gt;  p1        text</font>
+<font color ="#0000FF">*& &lt;--  p2        text</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+FORM set_layout .
+  CHECK gs_layo IS INITIAL.
+  gs_layo-zebra = 'X'.
+  gs_layo-cwidth_opt = 'X'.
+<font color ="#0000FF">*  gs_layo-no_merging = 'X'.</font>
+ENDFORM.
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& Form set_fieldcatalog</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& text</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& --&gt;  p1        text</font>
+<font color ="#0000FF">*& &lt;--  p2        text</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+FORM set_fieldcatalog .
+  DATA: lv_string TYPE i.
+  CLEAR: gt_fcat, gs_fcat, lv_string.
+
+  lv_string = lv_string + 1.
+  gs_fcat-fieldname = 'FDID'.
+  gs_fcat-coltext = '#####'.
+  gs_fcat-col_pos = lv_string.
+  APPEND gs_fcat TO gt_fcat.
+
+  CLEAR gs_fcat.
+  lv_string = lv_string + 1.
+  gs_fcat-fieldname = 'FDNAME'.
+  gs_fcat-coltext = '####'.
+  gs_fcat-col_pos = lv_string.
+  APPEND gs_fcat TO gt_fcat.
+
+  CLEAR gs_fcat.
+  lv_string = lv_string + 1.
+  gs_fcat-fieldname = 'FCATG'.
+  gs_fcat-coltext = '######'.
+  gs_fcat-col_pos = lv_string.
+  APPEND gs_fcat TO gt_fcat.
+
+  CLEAR gs_fcat.
+  lv_string = lv_string + 1.
+  gs_fcat-fieldname = 'FCATGT'.
+  gs_fcat-coltext = '####'.
+  gs_fcat-col_pos = lv_string.
+  APPEND gs_fcat TO gt_fcat.
+
+  CLEAR gs_fcat.
+  lv_string = lv_string + 1.
+  gs_fcat-fieldname = 'WUNIT'.
+  gs_fcat-coltext = '##'.
+  gs_fcat-col_pos = lv_string.
+  APPEND gs_fcat TO gt_fcat.
+
+  CLEAR gs_fcat.
+  lv_string = lv_string + 1.
+  gs_fcat-fieldname = 'STWAY'.
+  gs_fcat-coltext = '######'.
+  gs_fcat-col_pos = lv_string.
+  APPEND gs_fcat TO gt_fcat.
+
+  CLEAR gs_fcat.
+  lv_string = lv_string + 1.
+  gs_fcat-fieldname = 'STWAYT'.
+  gs_fcat-coltext = '####'.
+  gs_fcat-col_pos = lv_string.
+  APPEND gs_fcat TO gt_fcat.
+
+  CLEAR gs_fcat.
+  lv_string = lv_string + 1.
+  gs_fcat-fieldname = 'STPER'.
+  gs_fcat-coltext = '####(#)'.
+  gs_fcat-col_pos = lv_string.
+  APPEND gs_fcat TO gt_fcat.
+
+  CLEAR gs_fcat.
+  lv_string = lv_string + 1.
+  gs_fcat-fieldname = 'CALORY'.
+  gs_fcat-coltext = '## # CAL'.
+  gs_fcat-col_pos = lv_string.
+  APPEND gs_fcat TO gt_fcat.
+
+  CLEAR gs_fcat.
+  lv_string = lv_string + 1.
+  gs_fcat-fieldname = 'FPRIC'.
+  gs_fcat-coltext = '## # ####'.
+  gs_fcat-col_pos = lv_string.
+  APPEND gs_fcat TO gt_fcat.
+
+  CLEAR gs_fcat.
+  lv_string = lv_string + 1.
+  gs_fcat-fieldname = 'WAERS'.
+  gs_fcat-coltext = '##'.
+  gs_fcat-col_pos = lv_string.
+  APPEND gs_fcat TO gt_fcat.
+
+  CLEAR gs_fcat.
+  lv_string = lv_string + 1.
+  gs_fcat-fieldname = 'DEDAT'.
+  gs_fcat-coltext = '### ###'.
+  gs_fcat-col_pos = lv_string.
+  gs_fcat-no_out = 'X'.
+  APPEND gs_fcat TO gt_fcat.
+
+  CLEAR gs_fcat.
+  lv_string = lv_string + 1.
+  gs_fcat-fieldname = 'RGDAT'.
+  gs_fcat-coltext = '### ###'.
+  gs_fcat-col_pos = lv_string.
+  APPEND gs_fcat TO gt_fcat.
+
+  CLEAR gs_fcat.
+  lv_string = lv_string + 1.
+  gs_fcat-fieldname = 'CHDAT'.
+  gs_fcat-col_pos = lv_string.
+  gs_fcat-no_out = 'X'.
+  APPEND gs_fcat TO gt_fcat.
+
+  CLEAR gs_fcat.
+  lv_string = lv_string + 1.
+  gs_fcat-fieldname = 'FDEMP'.
+  gs_fcat-coltext = '#####'.
+  gs_fcat-col_pos = lv_string.
+  APPEND gs_fcat TO gt_fcat.
+
+  CLEAR gs_fcat.
+  lv_string = lv_string + 1.
+  gs_fcat-fieldname = 'FDEMPT'.
+  gs_fcat-coltext = '####'.
+  gs_fcat-col_pos = lv_string.
+  APPEND gs_fcat TO gt_fcat.
+
+  CLEAR gs_fcat.
+  lv_string = lv_string + 1.
+  gs_fcat-fieldname = 'STDEL'.
+  gs_fcat-coltext = '####'.
+  gs_fcat-col_pos = lv_string.
+  APPEND gs_fcat TO gt_fcat.
+ENDFORM.
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& Form set_sort</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& text</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& --&gt;  p1        text</font>
+<font color ="#0000FF">*& &lt;--  p2        text</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+FORM set_sort .
+  CLEAR: gt_sort, gs_sort.
+  gs_sort-spos = 1.
+  gs_sort-fieldname = 'STPER'.
+  gs_sort-up = 'X'.
+  APPEND gs_sort TO gt_sort.
+
+  CLEAR gs_sort.
+  gs_sort-spos = 2.
+  gs_sort-fieldname = 'FPRIC'.
+  gs_sort-up = 'X'.
+  APPEND gs_sort TO gt_sort.
+ENDFORM.
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& Form create_node_table</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& text</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& --&gt;  p1        text</font>
+<font color ="#0000FF">*& &lt;--  p2        text</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+FORM create_node_table CHANGING pt_node TYPE node_table_type.
+  DATA ls_node TYPE mtreesnode.
+
+  CLEAR ls_node.
+  ls_node-node_key = 'EMP'.        "tree ## ##
+  ls_node-isfolder = 'X'.          "## #### ##
+  ls_node-text = '##'.            "###
+  APPEND ls_node TO pt_node.
+
+  CLEAR ls_node.
+  ls_node-node_key = 'DEP'.
+  ls_node-relatkey = 'EMP'.        "## ##
+  ls_node-isfolder = 'X'.
+  ls_node-text = '##'.
+<font color ="#0000FF">*  ls_node-expander = 'X'.         "## ### ## ## ## ####</font>
+  APPEND ls_node TO pt_node.
+
+  CLEAR ls_node.
+  ls_node-node_key = 'MM'.
+  ls_node-relatkey = 'DEP'.        "## ##
+  ls_node-isfolder = 'X'.
+  ls_node-text = 'MM ##'.
+<font color ="#0000FF">*  ls_node-expander = 'X'.          " ## ### ### #### ### ##</font>
+  APPEND ls_node TO pt_node.
+
+  CLEAR ls_node.
+  ls_node-node_key = 'FI'.
+  ls_node-relatkey = 'DEP'.        "## ##
+  ls_node-isfolder = 'X'.
+  ls_node-text = 'FI ##'.
+<font color ="#0000FF">*  ls_node-expander = 'X'.</font>
+  APPEND ls_node TO pt_node.
+
+  CLEAR ls_node.
+  ls_node-node_key = 'SD'.
+  ls_node-relatkey = 'DEP'.        "## ##
+  ls_node-isfolder = 'X'.
+  ls_node-text = 'SD ##'.
+<font color ="#0000FF">*  ls_node-expander = 'X'.</font>
+  APPEND ls_node TO pt_node.
+
+  CLEAR ls_node.
+  ls_node-node_key = 'FOOD'.
+  ls_node-isfolder = 'X'.
+  ls_node-text = '###'.
+  APPEND ls_node TO pt_node.
+
+  CLEAR ls_node.
+  ls_node-node_key = 'FCATG'.
+  ls_node-relatkey = 'FOOD'.
+  ls_node-isfolder = 'X'.
+  ls_node-text = '####'.
+  APPEND ls_node TO pt_node.
+
+  CLEAR ls_node.
+  ls_node-node_key = 'M'.
+  ls_node-relatkey = 'FCATG'.
+  ls_node-isfolder = 'X'.
+  ls_node-text = '##'.
+<font color ="#0000FF">*  ls_node-expander = 'X'.</font>
+  APPEND ls_node TO pt_node.
+
+  CLEAR ls_node.
+  ls_node-node_key = 'S'.
+  ls_node-isfolder = 'X'.
+  ls_node-relatkey = 'FCATG'.
+  ls_node-text = '###'.
+<font color ="#0000FF">*  ls_node-expander = 'X'.</font>
+  APPEND ls_node TO pt_node.
+
+  CLEAR ls_node.
+  ls_node-node_key = 'F'.
+  ls_node-isfolder = 'X'.
+  ls_node-relatkey = 'FCATG'.
+  ls_node-text = '###'.
+<font color ="#0000FF">*  ls_node-expander = 'X'.</font>
+  APPEND ls_node TO pt_node.
+
+  CLEAR ls_node.
+  ls_node-node_key = 'V'.
+  ls_node-isfolder = 'X'.
+  ls_node-relatkey = 'FCATG'.
+  ls_node-text = '###'.
+<font color ="#0000FF">*  ls_node-expander = 'X'.</font>
+  APPEND ls_node TO pt_node.
+
+  CLEAR ls_node.
+  ls_node-node_key = 'D'.
+  ls_node-isfolder = 'X'.
+  ls_node-relatkey = 'FCATG'.
+  ls_node-text = '####'.
+<font color ="#0000FF">*  ls_node-expander = 'X'.</font>
+  APPEND ls_node TO pt_node.
+
+  CLEAR ls_node.
+  ls_node-node_key = 'O'.
+  ls_node-isfolder = 'X'.
+  ls_node-relatkey = 'FCATG'.
+  ls_node-text = '##'.
+<font color ="#0000FF">*  ls_node-expander = 'X'.</font>
+  APPEND ls_node TO pt_node.
+
+  CLEAR ls_node.
+  ls_node-node_key = 'G'.
+  ls_node-isfolder = 'X'.
+  ls_node-relatkey = 'FCATG'.
+  ls_node-text = '###'.
+<font color ="#0000FF">*  ls_node-expander = 'X'.</font>
+  APPEND ls_node TO pt_node.
+
+  CLEAR ls_node.
+  ls_node-node_key = 'STWAY'.
+  ls_node-relatkey = 'FOOD'.
+  ls_node-isfolder = 'X'.
+  ls_node-text = '####'.
+  APPEND ls_node TO pt_node.
+
+  CLEAR ls_node.
+  ls_node-node_key = 'K01'.
+  ls_node-isfolder = 'X'.
+  ls_node-relatkey = 'STWAY'.
+  ls_node-text = '##'.
+  APPEND ls_node TO pt_node.
+
+  CLEAR ls_node.
+  ls_node-node_key = 'K02'.
+  ls_node-isfolder = 'X'.
+  ls_node-relatkey = 'STWAY'.
+  ls_node-text = '##'.
+  APPEND ls_node TO pt_node.
+
+  CLEAR ls_node.
+  ls_node-node_key = 'K03'.
+  ls_node-isfolder = 'X'.
+  ls_node-relatkey = 'STWAY'.
+  ls_node-text = '##'.
+  APPEND ls_node TO pt_node.
+
+  CLEAR ls_node.
+  ls_node-node_key = 'K04'.
+  ls_node-isfolder = 'X'.
+  ls_node-relatkey = 'STWAY'.
+  ls_node-text = '##'.
+  APPEND ls_node TO pt_node.
+ENDFORM.
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& Form tree_event</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& text</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& --&gt;  p1        text</font>
+<font color ="#0000FF">*& &lt;--  p2        text</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+FORM tree_event .
+
+ENDFORM.
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& Form get_node_data</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& text</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*&      --&gt; NODE_KEY</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+FORM get_node_data  USING    VALUE(pv_key).
+  IF strlen( pv_key ) = 1.        " ###
+    gv_flag = 'F'.
+    PERFORM get_alv_info_food USING pv_key.
+  ELSEIF strlen( pv_key ) = 2 .   " ##
+    gv_flag = 'E'.
+    PERFORM get_alv_info_emp USING pv_key.
+  ELSEIF strlen( pv_key ) = 3.
+    gv_flag = 'S'.
+    PERFORM get_alv_info_stway USING pv_key.
+  ENDIF.
+
+  PERFORM display_alv.
+ENDFORM.
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& Form get_alv_info_emp</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& text</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& --&gt;  p1        text</font>
+<font color ="#0000FF">*& &lt;--  p2        text</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+FORM get_alv_info_emp USING VALUE(pv_key).
+  " ## ##
+  PERFORM get_emp_main_info USING pv_key.
+  " ## ##
+  PERFORM get_emp_add_info.
+ENDFORM.
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& Form get_emp_main_info</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& text</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& --&gt;  p1        text</font>
+<font color ="#0000FF">*& &lt;--  p2        text</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+FORM get_emp_main_info USING VALUE(pv_key).
+  SELECT empid lname fname rank depid adrss
+         phnum email jdate ldate gender empst
+    FROM ztassfi0002
+    INTO CORRESPONDING FIELDS OF TABLE gt_data
+   WHERE depid = pv_key.
+ENDFORM.
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& Form get_emp_add_info</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& text</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& --&gt;  p1        text</font>
+<font color ="#0000FF">*& &lt;--  p2        text</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+FORM get_emp_add_info .
+  LOOP AT gt_data ASSIGNING FIELD-SYMBOL(&lt;fs_data&gt;).
+    " ###
+    CONCATENATE &lt;fs_data&gt;-lname &lt;fs_data&gt;-fname INTO &lt;fs_data&gt;-ename.
+    " ###
+    PERFORM get_rankt USING &lt;fs_data&gt;-rank
+                      CHANGING &lt;fs_data&gt;-rankt.
+    "###
+    PERFORM get_dep_name USING &lt;fs_data&gt;-depid
+                         CHANGING &lt;fs_data&gt;-dname.
+    "##
+    PERFORM get_gender_text USING &lt;fs_data&gt;-gender
+                            CHANGING &lt;fs_data&gt;-gendert.
+    "####
+    PERFORM get_emp_stay USING &lt;fs_data&gt;-empst
+                         CHANGING &lt;fs_data&gt;-empstt.
+  ENDLOOP.
+ENDFORM.
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& Form get_rankt</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& text</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*&      --&gt; &lt;FS_DATA&gt;_RANK</font>
+<font color ="#0000FF">*&      &lt;-- &lt;FS_DATA&gt;_RANKT</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+FORM get_rankt  USING   VALUE(pv_rank)
+                CHANGING pv_rankt.
+  call function <a href ="zfasscw1401/zfasscw1401.html">'ZFASSCW1401'</a>
+    EXPORTING
+      iv_domname  = 'ZDASS_RANK'
+      iv_domvalue = pv_rank
+    IMPORTING
+      ev_ddtext   = pv_rankt.
+ENDFORM.
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& Form get_dep_name</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& text</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*&      --&gt; &lt;FS_DATA&gt;_DEPID</font>
+<font color ="#0000FF">*&      &lt;-- &lt;FS_DATA&gt;_DNAME</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+FORM get_dep_name  USING    VALUE(pv_depid)
+                   CHANGING pv_dname.
+  SELECT SINGLE dname
+    FROM ztassfi0003_t
+    INTO pv_dname
+   WHERE depid = pv_depid
+     AND spras = sy-langu.
+ENDFORM.
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& Form get_gender_text</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& text</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*&      --&gt; &lt;FS_DATA&gt;_GENDER</font>
+<font color ="#0000FF">*&      &lt;-- &lt;FS_DATA&gt;_GENDERT</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+FORM get_gender_text  USING    pv_gender
+                      CHANGING pv_gendert.
+  call function <a href ="zfasscw1401/zfasscw1401.html">'ZFASSCW1401'</a>
+    EXPORTING
+      iv_domname  = 'ZDASS_GENDER'
+      iv_domvalue = pv_gender
+    IMPORTING
+      ev_ddtext   = pv_gendert.
+
+ENDFORM.
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& Form get_alv_info_food</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& text</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*&      --&gt; PV_KEY</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+FORM get_alv_info_food  USING    VALUE(pv_key).
+  PERFORM get_food_main_info USING pv_key.
+  PERFORM get_food_add_info USING pv_key.
+ENDFORM.
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& Form get_food_main_info</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& text</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*&      --&gt; PV_KEY</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+FORM get_food_main_info  USING    VALUE(pv_key).
+  SELECT fdid fcatg wunit stway stper calory fpric
+         waers stdel dedat rgdat chdat fdemp
+    FROM ztassmm0301
+    INTO CORRESPONDING FIELDS OF TABLE gt_data
+   WHERE fcatg = pv_key.
+ENDFORM.
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& Form get_food_add_info</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& text</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*&      --&gt; PV_KEY</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+FORM get_food_add_info  USING    VALUE(pv_key).
+  LOOP AT gt_data ASSIGNING FIELD-SYMBOL(&lt;fs_data&gt;).
+    "####
+    PERFORM get_food_name USING &lt;fs_data&gt;-fdid
+                          CHANGING &lt;fs_data&gt;-fdname.
+    "## ## ###
+    PERFORM get_food_catalog_name USING &lt;fs_data&gt;-fcatg
+                                  CHANGING &lt;fs_data&gt;-fcatgt.
+    "#####
+    PERFORM get_stay_way USING &lt;fs_data&gt;-stway
+                         CHANGING &lt;fs_data&gt;-stwayt.
+    "####
+    PERFORM get_food_emp_name USING &lt;fs_data&gt;-fdemp
+                              CHANGING &lt;fs_data&gt;-fdempt.
+  ENDLOOP.
+ENDFORM.
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& Form get_food_name</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& text</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*&      --&gt; &lt;FS_DATA&gt;_FDID</font>
+<font color ="#0000FF">*&      &lt;-- &lt;FS_DATA&gt;_FDNAME</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+FORM get_food_name  USING    VALUE(pv_fdid)
+                    CHANGING pv_fdname.
+  SELECT SINGLE fdname
+    FROM ztassmm0301_t
+    INTO pv_fdname
+   WHERE fdid = pv_fdid
+     AND spras = sy-langu.
+ENDFORM.
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& Form get_food_catalog_name</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& text</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*&      --&gt; &lt;FS_DATA&gt;_FCATG</font>
+<font color ="#0000FF">*&      &lt;-- &lt;FS_DATA&gt;_FCATGT</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+FORM get_food_catalog_name  USING    VALUE(pv_fcatg)
+                            CHANGING pv_fcatgt.
+  call function <a href ="zfasscw1401/zfasscw1401.html">'ZFASSCW1401'</a>
+    EXPORTING
+      iv_domname  = 'ZDASS_FCATG'
+      iv_domvalue = pv_fcatg
+    IMPORTING
+      ev_ddtext   = pv_fcatgt.
+
+ENDFORM.
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& Form get_stay_way</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& text</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*&      --&gt; &lt;FS_DATA&gt;_STWAY</font>
+<font color ="#0000FF">*&      &lt;-- &lt;FS_DATA&gt;_STWAYT</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+FORM get_stay_way  USING    VALUE(pv_stway)
+                   CHANGING pv_stwayt.
+  call function <a href ="zfasscw1401/zfasscw1401.html">'ZFASSCW1401'</a>
+    EXPORTING
+      iv_domname  = 'ZDASS_STWAY'
+      iv_domvalue = pv_stway
+    IMPORTING
+      ev_ddtext   = pv_stwayt.
+
+ENDFORM.
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& Form get_food_emp_name</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& text</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*&      --&gt; &lt;FS_DATA&gt;_FDEMP</font>
+<font color ="#0000FF">*&      &lt;-- &lt;FS_DATA&gt;_FDEMPT</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+FORM get_food_emp_name  USING VALUE(pv_fdemp)
+                        CHANGING pv_fdempt.
+  DATA: lv_lname TYPE ztassfi0002-lname,
+        lv_fname TYPE ztassfi0002-fname.
+
+  SELECT SINGLE lname fname
+    FROM ztassfi0002
+    INTO (lv_lname, lv_fname)
+   WHERE empid = pv_fdemp.
+
+  CONCATENATE lv_lname lv_fname INTO pv_fdempt.
+ENDFORM.
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& Form set_fieldcatalog_02</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& text</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& --&gt;  p1        text</font>
+<font color ="#0000FF">*& &lt;--  p2        text</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+FORM set_fieldcatalog_02 .
+  DATA lv_string TYPE i.
+
+  CLEAR: gt_fcat, gs_fcat, lv_string.
+
+  lv_string = lv_string + 1.
+  gs_fcat-fieldname = 'EMPID'.
+  gs_fcat-coltext = '####'.
+  gs_fcat-col_pos = lv_string.
+  APPEND gs_fcat TO gt_fcat.
+
+  CLEAR gs_fcat.
+  gs_fcat-fieldname = 'LNAME'.
+  gs_fcat-no_out = 'X'.
+  APPEND gs_fcat TO gt_fcat.
+
+  CLEAR gs_fcat.
+  gs_fcat-fieldname = 'FNAME'.
+  gs_fcat-no_out = 'X'.
+  APPEND gs_fcat TO gt_fcat.
+
+  CLEAR gs_fcat.
+  lv_string = lv_string + 1.
+  gs_fcat-fieldname = 'ENAME'.
+  gs_fcat-coltext = '###'.
+  gs_fcat-col_pos = lv_string.
+  APPEND gs_fcat TO gt_fcat.
+
+  CLEAR gs_fcat.
+  lv_string = lv_string + 1.
+  gs_fcat-fieldname = 'GENDER'.
+  gs_fcat-coltext = '####'.
+  gs_fcat-col_pos = lv_string.
+  APPEND gs_fcat TO gt_fcat.
+
+  CLEAR gs_fcat.
+  lv_string = lv_string + 1.
+  gs_fcat-fieldname = 'GENDERT'.
+  gs_fcat-coltext = '##'.
+  gs_fcat-col_pos = lv_string.
+  APPEND gs_fcat TO gt_fcat.
+
+  CLEAR gs_fcat.
+  lv_string = lv_string + 1.
+  gs_fcat-fieldname = 'RANK'.
+  gs_fcat-coltext = '####'.
+  gs_fcat-col_pos = lv_string.
+  APPEND gs_fcat TO gt_fcat.
+
+  CLEAR gs_fcat.
+  lv_string = lv_string + 1.
+  gs_fcat-fieldname = 'RANKT'.
+  gs_fcat-coltext = '##'.
+  gs_fcat-col_pos = lv_string.
+  APPEND gs_fcat TO gt_fcat.
+
+  CLEAR gs_fcat.
+  lv_string = lv_string + 1.
+  gs_fcat-fieldname = 'DEPID'.
+  gs_fcat-coltext = '####'.
+  gs_fcat-col_pos = lv_string.
+  gs_fcat-no_out = 'X'.
+  APPEND gs_fcat TO gt_fcat.
+
+  CLEAR gs_fcat.
+  lv_string = lv_string + 1.
+  gs_fcat-fieldname = 'DNAME'.
+  gs_fcat-coltext = '###'.
+  gs_fcat-col_pos = lv_string.
+  APPEND gs_fcat TO gt_fcat.
+
+  CLEAR gs_fcat.
+  lv_string = lv_string + 1.
+  gs_fcat-fieldname = 'ADRSS'.
+  gs_fcat-coltext = '##'.
+  gs_fcat-col_pos = lv_string.
+  APPEND gs_fcat TO gt_fcat.
+
+  CLEAR gs_fcat.
+  lv_string = lv_string + 1.
+  gs_fcat-fieldname = 'PHNUM'.
+  gs_fcat-coltext = '####'.
+  gs_fcat-col_pos = lv_string.
+  gs_fcat-lzero = 'X'.
+  APPEND gs_fcat TO gt_fcat.
+
+  CLEAR gs_fcat.
+  lv_string = lv_string + 1.
+  gs_fcat-fieldname = 'EMAIL'.
+  gs_fcat-coltext = '###'.
+  gs_fcat-col_pos = lv_string.
+  APPEND gs_fcat TO gt_fcat.
+
+  CLEAR gs_fcat.
+  lv_string = lv_string + 1.
+  gs_fcat-fieldname = 'EMPST'.
+  gs_fcat-coltext = '######'.
+  gs_fcat-col_pos = lv_string.
+  APPEND gs_fcat TO gt_fcat.
+
+  CLEAR gs_fcat.
+  lv_string = lv_string + 1.
+  gs_fcat-fieldname = 'EMPSTT'.
+  gs_fcat-coltext = '####'.
+  gs_fcat-col_pos = lv_string.
+  APPEND gs_fcat TO gt_fcat.
+
+  CLEAR gs_fcat.
+  lv_string = lv_string + 1.
+  gs_fcat-fieldname = 'JDATE'.
+  gs_fcat-coltext = '###'.
+  gs_fcat-col_pos = lv_string.
+  APPEND gs_fcat TO gt_fcat.
+
+  CLEAR gs_fcat.
+  lv_string = lv_string + 1.
+  gs_fcat-fieldname = 'LDATE'.
+  gs_fcat-coltext = '###'.
+  gs_fcat-col_pos = lv_string.
+  APPEND gs_fcat TO gt_fcat.
+
+ENDFORM.
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& Form get_emp_stay</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& text</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*&      --&gt; &lt;FS_DATA&gt;_EMPST</font>
+<font color ="#0000FF">*&      &lt;-- &lt;FS_DATA&gt;_EMPSTT</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+FORM get_emp_stay  USING    VALUE(pv_empst)
+                   CHANGING pv_empstt.
+  call function <a href ="zfasscw1401/zfasscw1401.html">'ZFASSCW1401'</a>
+    EXPORTING
+      iv_domname  = 'ZDASS_EMPST'
+      iv_domvalue = pv_empst
+    IMPORTING
+      ev_ddtext   = pv_empstt.
+
+ENDFORM.
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& Form set_sort_02</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& text</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& --&gt;  p1        text</font>
+<font color ="#0000FF">*& &lt;--  p2        text</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+FORM set_sort_02 .
+  CLEAR: gt_sort, gs_sort.
+  gs_sort-spos = 1.
+  gs_sort-fieldname = 'JDATE'.
+  gs_sort-up = 'X'.
+  APPEND gs_sort TO gt_sort.
+
+  CLEAR gs_sort.
+  gs_sort-spos = 2.
+  gs_sort-fieldname = 'RANK'.
+  gs_sort-down = 'X'.
+  APPEND gs_sort TO gt_sort.
+ENDFORM.
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& Form get_alv_info_stway</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& text</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*&      --&gt; PV_KEY</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+FORM get_alv_info_stway  USING    VALUE(pv_key).
+  PERFORM get_stway_main USING pv_key.
+  PERFORM get_food_add_info USING pv_key.
+ENDFORM.
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& Form get_stway_main</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& text</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*&      --&gt; PV_KEY</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+FORM get_stway_main  USING    VALUE(pv_key).
+  SELECT fdid fcatg wunit stway stper calory fpric
+         waers stdel dedat rgdat chdat fdemp
+    FROM ztassmm0301
+    INTO CORRESPONDING FIELDS OF TABLE gt_data
+   WHERE stway = pv_key.
+ENDFORM.
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& Form set_sort_03</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& text</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& --&gt;  p1        text</font>
+<font color ="#0000FF">*& &lt;--  p2        text</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+FORM set_sort_03 .
+  CLEAR: gt_sort, gs_sort.
+  gs_sort-spos = 1.
+  gs_sort-fieldname = 'FCATG'.
+  gs_sort-up = 'X'.
+  APPEND gs_sort TO gt_sort.
+
+  CLEAR gs_sort.
+  gs_sort-spos = 2.
+  gs_sort-fieldname = 'STPER'.
+  gs_sort-up = 'X'.
+  APPEND gs_sort TO gt_sort.
+
+  CLEAR gs_sort.
+  gs_sort-spos = 3.
+  gs_sort-fieldname = 'FPRIC'.
+  gs_sort-up = 'X'.
+  APPEND gs_sort TO gt_sort.
+ENDFORM.
+</pre>
+<hr>
+<font size="2" face = "Sans Serif">Extracted by Direct Download Enterprise version 1.3.1 - E.G.Mellodew. 1998-2005 UK. Sap Release 754
+</font>
+</body>
+</html>
