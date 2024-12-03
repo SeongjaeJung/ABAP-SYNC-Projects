@@ -1,0 +1,42 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<html>
+<head>
+<title>ZBASSMM041</title>
+</head>
+<body bgcolor="#FFFFE0">
+<font size="3" face = "Arial" color="#000000"><b>Code listing for: ZBASSMM041</b></font>
+<br>
+<font size="3" face = "Arial" color="#000000"><b>Description:  [ASS] ### BDC</b></font>
+<hr>
+<pre width="100">
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& Report ZBASSMM041</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*&</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+
+include <a href ="zbassmm041_top.html">zbassmm041_top</a>.    " Global Data
+
+include <a href ="zbassmm041_o01.html">zbassmm041_o01</a>.  " PBO-Modules
+include <a href ="zbassmm041_i01.html">zbassmm041_i01</a>.  " PAI-Modules
+include <a href ="zbassmm041_f01.html">zbassmm041_f01</a>.  " FORM-Routines
+
+INITIALIZATION.
+
+AT SELECTION-SCREEN ON VALUE-REQUEST FOR pa_file.
+  PERFORM search_file.
+
+START-OF-SELECTION.
+  PERFORM excel_upload CHANGING gt_data.
+
+  PERFORM bdc USING gt_data.
+
+<font color ="#0000FF">*Text elements</font>
+<font color ="#0000FF">*----------------------------------------------------------</font>
+<font color ="#0000FF">* 001 ## ###</font>
+</pre>
+<hr>
+<font size="2" face = "Sans Serif">Extracted by Direct Download Enterprise version 1.3.1 - E.G.Mellodew. 1998-2005 UK. Sap Release 754
+</font>
+</body>
+</html>

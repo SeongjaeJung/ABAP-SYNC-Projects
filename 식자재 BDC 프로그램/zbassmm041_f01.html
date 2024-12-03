@@ -1,0 +1,205 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<html>
+<head>
+<title>ZBASSMM041_F01</title>
+</head>
+<body bgcolor="#FFFFE0">
+<font size="3" face = "Arial" color="#000000"><b>Code listing for: ZBASSMM041_F01</b></font>
+<br>
+<font size="3" face = "Arial" color="#000000"><b>Description:  Include ZBASSMM041_F01</b></font>
+<hr>
+<pre width="100">
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& Include          ZBASSMM041_F01</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& Form search_file</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& text</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& --&gt;  p1        text</font>
+<font color ="#0000FF">*& &lt;--  p2        text</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+FORM search_file .
+  DATA: lt_file TYPE filetable,
+        ls_file LIKE LINE OF lt_file,
+        lv_rc   TYPE i.
+  CALL METHOD cl_gui_frontend_services=&gt;file_open_dialog
+    CHANGING
+      file_table = lt_file
+      rc         = lv_rc.
+  IF sy-subrc &lt;&gt; 0.
+<font color ="#0000FF">*   Implement suitable error handling here</font>
+  ENDIF.
+
+  READ TABLE lt_file INDEX 1 INTO ls_file.
+  IF sy-subrc = 0.
+    pa_file = ls_file.
+  ENDIF.
+ENDFORM.
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& Form excel_upload</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& text</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*&      &lt;-- GT_DATA</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+FORM excel_upload  CHANGING pt_data LIKE gt_data.
+  DATA: lt_down TYPE TABLE OF alsmex_tabline,
+        ls_down LIKE LINE OF lt_down,
+        ls_data LIKE LINE OF pt_data.
+
+  CALL FUNCTION 'ALSM_EXCEL_TO_INTERNAL_TABLE'
+    EXPORTING
+      filename    = pa_file
+      i_begin_col = 1
+      i_begin_row = 2
+      i_end_col   = 10
+      i_end_row   = 1000
+    TABLES
+      intern      = lt_down
+<font color ="#0000FF">*   EXCEPTIONS</font>
+<font color ="#0000FF">*     INCONSISTENT_PARAMETERS       = 1</font>
+<font color ="#0000FF">*     UPLOAD_OLE  = 2</font>
+<font color ="#0000FF">*     OTHERS      = 3</font>
+    .
+  IF sy-subrc &lt;&gt; 0.
+<font color ="#0000FF">* Implement suitable error handling here</font>
+  ENDIF.
+
+  LOOP AT lt_down INTO ls_down.
+    CASE ls_down-col.
+      WHEN '1'.
+        ls_data-fdname = ls_down-value.
+      WHEN '2'.
+        ls_data-fcatg = ls_down-value.
+      WHEN '3'.
+        ls_data-wunit = ls_down-value.
+      WHEN '4'.
+        ls_data-stway = ls_down-value.
+      WHEN '5'.
+        ls_data-stper = ls_down-value.
+      WHEN '6'.
+        ls_data-calory = ls_down-value.
+      WHEN '7'.
+        ls_data-fpric = ls_down-value.
+      WHEN '8'.
+        ls_data-waers = ls_down-value.
+      WHEN '9'.
+        ls_data-rgdat = ls_down-value.
+      WHEN '10'.
+        ls_data-fdemp = ls_down-value.
+
+        AT END OF row.
+          APPEND ls_data TO pt_data.
+          CLEAR ls_data.
+        ENDAT.
+        CLEAR ls_down.
+    ENDCASE.
+  ENDLOOP.
+ENDFORM.
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& Form bdc</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& text</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*&      --&gt; GT_DATA</font>
+<font color ="#0000FF">*&      &lt;-- GT_BDC</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+FORM bdc  USING    VALUE(pt_data) LIKE gt_data.
+  DATA ls_data LIKE LINE OF pt_data.
+
+  LOOP AT pt_data INTO ls_data.
+    gv_tabix = sy-tabix.
+    PERFORM recording
+      USING: 'X' 'SAPMZASSMM042' '0100',
+             '' 'BDC_CURSOR' 'ZSASSMM0423-FDEMP',
+             '' 'BDC_OKCODE' 'CREATE',
+             '' 'ZSASSMM0423-FCATG' ls_data-fcatg,
+             '' 'ZSASSMM0423-FDNAME' ls_data-fdname,
+             '' 'ZSASSMM0423-WUNIT' ls_data-wunit,
+             '' 'ZSASSMM0423-STWAY' ls_data-stway,
+             '' 'ZSASSMM0423-FDEMP' ls_data-fdemp.
+    PERFORM recording2
+      USING: '' 'ZSASSMM0423-STPER' ls_data-stper,
+             '' 'ZSASSMM0423-CALORY' ls_data-calory,
+             'X' 'ZSASSMM0423-FPRIC' ls_data-fpric.
+
+    CALL TRANSACTION 'ZASSMM042' USING gt_bdc MODE 'N'.
+    IF sy-subrc &lt;&gt; 0.
+      CONCATENATE 'Error on row' gv_tabix ':' ls_data-fdname INTO gv_error.
+      APPEND gv_error TO gt_error.
+      CLEAR gv_error.
+    ENDIF.
+  ENDLOOP.
+
+  IF gt_error IS NOT INITIAL.
+    LOOP AT gt_error INTO gv_error.
+      WRITE: / gv_error.
+      CLEAR gv_error.
+    ENDLOOP.
+  ELSE.
+    WRITE: 'No Error'.
+  ENDIF.
+ENDFORM.
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& Form recording</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& text</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*&      --&gt; P_</font>
+<font color ="#0000FF">*&      --&gt; P_</font>
+<font color ="#0000FF">*&      --&gt; P_</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+FORM recording  USING    VALUE(p_screen)
+                         VALUE(p_name)
+                         VALUE(p_value).
+  DATA: ls_bdc   LIKE LINE OF gt_bdc.
+  CLEAR ls_bdc.
+
+  IF p_screen = 'X'.
+    ls_bdc-program = p_name.
+    ls_bdc-dynpro = p_value.
+    ls_bdc-dynbegin = p_screen.
+  ELSE.
+    ls_bdc-fnam = p_name.
+    ls_bdc-fval = p_value.
+  ENDIF.
+
+  APPEND ls_bdc TO gt_bdc.
+ENDFORM.
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& Form recording2</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& text</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*&      --&gt; P_</font>
+<font color ="#0000FF">*&      --&gt; LS_DATA_STPER</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+FORM recording2  USING    VALUE(p_flag)
+                          VALUE(p_name)
+                          VALUE(p_value).
+  DATA: ls_bdc    LIKE LINE OF gt_bdc,
+        lv_value  TYPE n LENGTH 15,
+        lv_value2 TYPE n LENGTH 10.
+
+  CLEAR ls_bdc.
+  IF p_flag = 'X'.
+    lv_value = p_value.
+<font color ="#0000FF">*    lv_value</font>
+    ls_bdc-fnam = p_name.
+    ls_bdc-fval = lv_value.
+  ELSE.
+    lv_value2 = p_value.
+    ls_bdc-fnam = p_name.
+    ls_bdc-fval = lv_value2.
+  ENDIF.
+
+  APPEND ls_bdc TO gt_bdc.
+ENDFORM.
+</pre>
+<hr>
+<font size="2" face = "Sans Serif">Extracted by Direct Download Enterprise version 1.3.1 - E.G.Mellodew. 1998-2005 UK. Sap Release 754
+</font>
+</body>
+</html>
