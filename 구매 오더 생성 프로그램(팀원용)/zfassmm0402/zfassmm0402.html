@@ -1,0 +1,43 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<html>
+<head>
+<title>ZFASSMM0402</title>
+</head>
+<body bgcolor="#FFFFE0">
+<font size="3" face = "Arial" color="#000000"><b>Code listing for function: ZFASSMM0402</b></font>
+<br>
+<font size="3" face = "Arial" color="#000000"><b>Description:  [ASS-2T] #### ##</b></font>
+<hr>
+<pre width="100">
+FUNCTION ZFASSMM0402 .
+<font color ="#0000FF">*"----------------------------------------------------------------------</font>
+<font color ="#0000FF">*"*"Local Interface:</font>
+<font color ="#0000FF">*"  IMPORTING</font>
+<font color ="#0000FF">*"     REFERENCE(IV_ORDID) TYPE  ZSASSMM0402-ORDID</font>
+<font color ="#0000FF">*"  EXPORTING</font>
+<font color ="#0000FF">*"     REFERENCE(EV_APPNO) TYPE  ZSASSMM0402-APPNO</font>
+<font color ="#0000FF">*"     REFERENCE(EV_APPSTA) TYPE  ZSASSMM0402-APPSTA</font>
+<font color ="#0000FF">*"----------------------------------------------------------------------</font>
+
+<font color ="#0000FF">*       <a href ="global-zfassmm0402.html">Global data declarations</a></font>
+  " ###### ### ####, ## ## ##
+  PERFORM select_appno USING    iv_ordid
+                       CHANGING ev_appno
+                                ev_appsta.
+ENDFUNCTION.
+
+
+<font color ="#0000FF">*Messages</font>
+<font color ="#0000FF">*----------------------------------------------------------</font>
+<font color ="#0000FF">*</font>
+<font color ="#0000FF">* Message class: ZMCASSMM04</font>
+<font color ="#0000FF">*004   #### #### ###.</font>
+<font color ="#0000FF">*005   ### #### #### ###.</font>
+<font color ="#0000FF">*017   Fixed Value ## ##</font>
+<font color ="#0000FF">*046   #### ## ##</font>
+</pre>
+<hr>
+<font size="2" face = "Sans Serif">Extracted by Direct Download Enterprise version 1.3.1 - E.G.Mellodew. 1998-2005 UK. Sap Release 754
+</font>
+</body>
+</html>

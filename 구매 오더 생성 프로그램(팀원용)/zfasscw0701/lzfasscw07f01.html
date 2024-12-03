@@ -1,0 +1,61 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<html>
+<head>
+<title>LZFASSCW07F01</title>
+</head>
+<body bgcolor="#FFFFE0">
+<font size="3" face = "Arial" color="#000000"><b>Code listing for: LZFASSCW07F01</b></font>
+<br>
+<font size="3" face = "Arial" color="#000000"><b>Description:  Include LZFASSCW07F01</b></font>
+<hr>
+<pre width="100">
+<font color ="#0000FF">*----------------------------------------------------------------------*</font>
+<font color ="#0000FF">***INCLUDE LZFASSCW07F01.</font>
+<font color ="#0000FF">*----------------------------------------------------------------------*</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& Form get_warehouse_name</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& text</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*&      --&gt; IV_WAHID</font>
+<font color ="#0000FF">*&      &lt;-- EV_WNAME</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+FORM get_warehouse_name  USING    VALUE(pv_wahid)
+                         CHANGING pv_wname
+                                  pt_name TYPE zsasscw0701_t
+                                  ps_name TYPE zsasscw0701.
+  CLEAR pv_wname.
+
+  READ TABLE pt_name WITH KEY wahid = pv_wahid INTO ps_name.
+  IF sy-subrc &lt;&gt; 0.
+
+    PERFORM get_wname CHANGING pt_name.
+    READ TABLE pt_name WITH KEY wahid = pv_wahid INTO ps_name.
+    IF sy-subrc = 0.
+      pv_wname = ps_name-wname.
+    ENDIF.
+
+  ELSE.
+    pv_wname = ps_name-wname.
+  ENDIF.
+ENDFORM.
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& Form get_wname</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& text</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*&      --&gt; PV_WAHID</font>
+<font color ="#0000FF">*&      &lt;-- PV_WNAME</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+FORM get_wname CHANGING pt_name TYPE zsasscw0701_t.
+  SELECT wahid wname
+    FROM ztassmm0001_t
+    INTO CORRESPONDING FIELDS OF TABLE pt_name
+   WHERE spras = sy-langu.
+ENDFORM.
+</pre>
+<hr>
+<font size="2" face = "Sans Serif">Extracted by Direct Download Enterprise version 1.3.1 - E.G.Mellodew. 1998-2005 UK. Sap Release 754
+</font>
+</body>
+</html>

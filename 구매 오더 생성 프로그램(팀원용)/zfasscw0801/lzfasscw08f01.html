@@ -1,0 +1,76 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<html>
+<head>
+<title>LZFASSCW08F01</title>
+</head>
+<body bgcolor="#FFFFE0">
+<font size="3" face = "Arial" color="#000000"><b>Code listing for: LZFASSCW08F01</b></font>
+<br>
+<font size="3" face = "Arial" color="#000000"><b>Description:  Include LZFASSCW08F01</b></font>
+<hr>
+<pre width="100">
+<font color ="#0000FF">*----------------------------------------------------------------------*</font>
+<font color ="#0000FF">***INCLUDE LZFASSCW08F01.</font>
+<font color ="#0000FF">*----------------------------------------------------------------------*</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& Form get_plant_id_name</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& text</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*&      --&gt; IV_WAHID</font>
+<font color ="#0000FF">*&      &lt;-- EV_PNTID</font>
+<font color ="#0000FF">*&      &lt;-- EV_PNAME</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+FORM get_plant_id_name  USING    VALUE(pv_wahid)
+                        CHANGING pv_pntid
+                                 pv_pname
+                                 pt_pnt TYPE zsasscw0801_t
+                                 ps_pnt TYPE zsasscw0801.
+  CLEAR: pv_pntid, pv_pname.
+
+  READ TABLE pt_pnt WITH KEY wahid = pv_wahid INTO ps_pnt.
+  IF sy-subrc &lt;&gt; 0.
+
+    PERFORM get_pntid_pname CHANGING pt_pnt.
+    READ TABLE pt_pnt WITH KEY wahid = pv_wahid INTO ps_pnt.
+    IF sy-subrc = 0.
+      pv_pntid = ps_pnt-pntid.
+      pv_pname = ps_pnt-pname.
+    ENDIF.
+
+  ELSE.
+    pv_pntid = ps_pnt-pntid.
+    pv_pname = ps_pnt-pname.
+  ENDIF.
+ENDFORM.
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& Form get_pntid_pname</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& text</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*&      --&gt; PV_WAHID</font>
+<font color ="#0000FF">*&      &lt;-- PV_PNTID</font>
+<font color ="#0000FF">*&      &lt;-- PV_PNAME</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+FORM get_pntid_pname CHANGING pt_pnt TYPE zsasscw0801_t.
+  DATA ls_pnt LIKE LINE OF pt_pnt.
+
+  SELECT wahid pntid
+    FROM ztassmm0001
+    INTO CORRESPONDING FIELDS OF TABLE pt_pnt.
+
+  LOOP AT pt_pnt INTO ls_pnt.
+    SELECT SINGLE pname
+      FROM ztassmm0002_t
+      INTO ls_pnt-pname
+     WHERE pntid = ls_pnt-pntid
+       AND spras = sy-langu.
+   MODIFY pt_pnt FROM ls_pnt.
+  ENDLOOP.
+ENDFORM.
+</pre>
+<hr>
+<font size="2" face = "Sans Serif">Extracted by Direct Download Enterprise version 1.3.1 - E.G.Mellodew. 1998-2005 UK. Sap Release 754
+</font>
+</body>
+</html>

@@ -1,0 +1,104 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<html>
+<head>
+<title>SAPMZASSMM040</title>
+</head>
+<body bgcolor="#FFFFE0">
+<font size="3" face = "Arial" color="#000000"><b>Code listing for: SAPMZASSMM040</b></font>
+<br>
+<font size="3" face = "Arial" color="#000000"><b>Description:  [ASS] ## ## ## ####</b></font>
+<hr>
+<pre width="100">
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& Module Pool      SAPMZASSMM040</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*&</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+
+include <a href ="mzassmm040_top.html">mzassmm040_top</a>.                         .  " Global Data
+
+include <a href ="mzassmm040_o01.html">mzassmm040_o01</a>.                         .  " PBO-Modules
+include <a href ="mzassmm040_i01.html">mzassmm040_i01</a>.                         .  " PAI-Modules
+include <a href ="mzassmm040_f01.html">mzassmm040_f01</a>.                         .  " FORM-Routines
+include <a href ="mzassmm040_c01.html">mzassmm040_c01</a>.                         .  " Class
+
+LOAD-OF-PROGRAM.
+  PERFORM set_default_data CHANGING zsassmm0401.
+
+<font color ="#0000FF">*GUI Texts</font>
+<font color ="#0000FF">*----------------------------------------------------------</font>
+<font color ="#0000FF">* T100 --&gt; [ASS] ## ## ## (###)</font>
+<font color ="#0000FF">* T110 --&gt; ## ##</font>
+<font color ="#0000FF">* T120 --&gt; ### ## ##</font>
+<font color ="#0000FF">* T160 --&gt; ## ##</font>
+<font color ="#0000FF">* T200 --&gt; ## ## ##</font>
+<font color ="#0000FF">* T210 --&gt; ## ##</font>
+<font color ="#0000FF">* T300 --&gt; ## ## ##</font>
+<font color ="#0000FF">* T400 --&gt; ## ## ## ##, ## ##</font>
+<font color ="#0000FF">* T500 --&gt; ## ## ##</font>
+
+<font color ="#0000FF">*Text elements</font>
+<font color ="#0000FF">*----------------------------------------------------------</font>
+<font color ="#0000FF">* C01 ##</font>
+<font color ="#0000FF">* C02 ####</font>
+<font color ="#0000FF">* C03 ##</font>
+<font color ="#0000FF">* C04 ##</font>
+<font color ="#0000FF">* C05 ## ########?</font>
+<font color ="#0000FF">* C06 YES</font>
+<font color ="#0000FF">* C07 NO</font>
+<font color ="#0000FF">* C08 ### #### #####. ### #######?</font>
+<font color ="#0000FF">* C09 # ##### ## ########?</font>
+<font color ="#0000FF">* C10 ########?</font>
+<font color ="#0000FF">* C11 ## ########?</font>
+
+
+<font color ="#0000FF">*Messages</font>
+<font color ="#0000FF">*----------------------------------------------------------</font>
+<font color ="#0000FF">*</font>
+<font color ="#0000FF">* Message class: ZMCASSMM04</font>
+<font color ="#0000FF">*000   Container ## ##</font>
+<font color ="#0000FF">*001   ALV ## ##</font>
+<font color ="#0000FF">*002   ALV ## ##</font>
+<font color ="#0000FF">*003   ## # ## #### ### # ####.</font>
+<font color ="#0000FF">*006   ## #### ## &## 14# ### #### ## #####.</font>
+<font color ="#0000FF">*007   ## ### ## ### +/- 10% #### #####.</font>
+<font color ="#0000FF">*008   ## ## #### # ## #### # ####.</font>
+<font color ="#0000FF">*009   ### ### ##### ####.</font>
+<font color ="#0000FF">*011   ##### 0# ### ## ### #### # ####.</font>
+<font color ="#0000FF">*018   ### ### #### ###.</font>
+<font color ="#0000FF">*019   ### #### ###.</font>
+<font color ="#0000FF">*020   ### ##, ### ## #### ###.</font>
+<font color ="#0000FF">*021   ### #### ###.</font>
+<font color ="#0000FF">*022   ### ### #### ###.</font>
+<font color ="#0000FF">*024   ## ### #### ###.</font>
+<font color ="#0000FF">*025   ## ### #####.</font>
+<font color ="#0000FF">*026   ### ### ##</font>
+<font color ="#0000FF">*027   ### ### ##</font>
+<font color ="#0000FF">*028   ## ### ## ### #### ###.</font>
+<font color ="#0000FF">*029   ## ### 0###. ## ### ######.</font>
+<font color ="#0000FF">*030   ## ### #####. ###### ## ### ######.</font>
+<font color ="#0000FF">*031   ## ### #####.</font>
+<font color ="#0000FF">*032   ## ### #####. ###### ## ### ######.</font>
+<font color ="#0000FF">*033   ## ### #####. ###### ## ### ######.</font>
+<font color ="#0000FF">*034   ## #### ## #####.</font>
+<font color ="#0000FF">*035   #### ## ##</font>
+<font color ="#0000FF">*036   ## ##</font>
+<font color ="#0000FF">*037   ## ## ##</font>
+<font color ="#0000FF">*038   ### ## ### ### # ####.</font>
+<font color ="#0000FF">*039   ## ##</font>
+<font color ="#0000FF">*040   ## ### #####.</font>
+<font color ="#0000FF">*041   #### ### #### ######.</font>
+<font color ="#0000FF">*042   ### ### #### # ####.</font>
+<font color ="#0000FF">*057   ### ### #### # ####. ## ######.</font>
+<font color ="#0000FF">*058   ## #### ### #### # ####.</font>
+<font color ="#0000FF">*059   ## ### #####.</font>
+<font color ="#0000FF">*060   ### #####.</font>
+<font color ="#0000FF">*061   ## ### ### #### # ####.</font>
+<font color ="#0000FF">*062   ### ### #### ##, ### #####.</font>
+<font color ="#0000FF">*063   ### ### #### ## ### #####.</font>
+</pre>
+<hr>
+<font size="2" face = "Sans Serif">Extracted by Direct Download Enterprise version 1.3.1 - E.G.Mellodew. 1998-2005 UK. Sap Release 754
+</font>
+</body>
+</html>

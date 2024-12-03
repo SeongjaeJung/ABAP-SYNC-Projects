@@ -1,0 +1,67 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<html>
+<head>
+<title>LZFASSCW06F01</title>
+</head>
+<body bgcolor="#FFFFE0">
+<font size="3" face = "Arial" color="#000000"><b>Code listing for: LZFASSCW06F01</b></font>
+<br>
+<font size="3" face = "Arial" color="#000000"><b>Description:  Include LZFASSCW06F01</b></font>
+<hr>
+<pre width="100">
+<font color ="#0000FF">*----------------------------------------------------------------------*</font>
+<font color ="#0000FF">***INCLUDE LZFASSCW06F01.</font>
+<font color ="#0000FF">*----------------------------------------------------------------------*</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& Form get_food_name_wunit</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& text</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*&      --&gt; IV_FDID</font>
+<font color ="#0000FF">*&      &lt;-- EV_FDNAME</font>
+<font color ="#0000FF">*&      &lt;-- EV_WUNIT</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+FORM get_food_info  USING    VALUE(pv_fdid)
+                    CHANGING es_food TYPE zsasscw0601
+                             pt_food TYPE zsasscw0601_t
+                             ps_food TYPE zsasscw0601.
+
+  READ TABLE pt_food WITH KEY fdid = pv_fdid INTO ps_food.
+  IF sy-subrc = 0.
+    MOVE-CORRESPONDING ps_food TO es_food.
+  ELSE.
+    PERFORM get_fdid_wunit USING pv_fdid
+                           CHANGING ps_food.
+    APPEND ps_food TO pt_food.
+    MOVE-CORRESPONDING ps_food TO es_food.
+  ENDIF.
+ENDFORM.
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& Form get_fdid_wunit</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& text</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*&      --&gt; PV_FDID</font>
+<font color ="#0000FF">*&      &lt;-- PV_FDNAME</font>
+<font color ="#0000FF">*&      &lt;-- PV_WUNIT</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+FORM get_fdid_wunit  USING    VALUE(pv_fdid)
+                     CHANGING ps_food TYPE zsasscw0601.
+  SELECT SINGLE FDID FCATG WUNIT STWAY STPER CALORY FPRIC
+         WAERS STDEL DEDAT RGDAT CHDAT FDEMP
+    FROM ztassmm0301
+    INTO CORRESPONDING FIELDS OF ps_food
+   WHERE fdid = pv_fdid.
+
+  SELECT SINGLE fdname spras
+    FROM ztassmm0301_t
+    INTO (ps_food-fdname, ps_food-spras)
+   WHERE fdid = pv_fdid
+     AND spras = sy-langu.
+ENDFORM.
+</pre>
+<hr>
+<font size="2" face = "Sans Serif">Extracted by Direct Download Enterprise version 1.3.1 - E.G.Mellodew. 1998-2005 UK. Sap Release 754
+</font>
+</body>
+</html>

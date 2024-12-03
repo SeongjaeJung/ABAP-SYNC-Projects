@@ -1,0 +1,57 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<html>
+<head>
+<title>LZFASSCW10F01</title>
+</head>
+<body bgcolor="#FFFFE0">
+<font size="3" face = "Arial" color="#000000"><b>Code listing for: LZFASSCW10F01</b></font>
+<br>
+<font size="3" face = "Arial" color="#000000"><b>Description:  Include LZFASSCW10F01</b></font>
+<hr>
+<pre width="100">
+<font color ="#0000FF">*----------------------------------------------------------------------*</font>
+<font color ="#0000FF">***INCLUDE LZFASSCW10F01.</font>
+<font color ="#0000FF">*----------------------------------------------------------------------*</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& Form message_box</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& text</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*&      --&gt; IV_TEXT</font>
+<font color ="#0000FF">*&      &lt;-- EV_ANSWER</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+FORM message_box  USING    VALUE(pv_text)
+                  CHANGING pv_answer.
+  CLEAR pv_answer.
+  CALL FUNCTION 'POPUP_TO_CONFIRM'
+    EXPORTING
+     TITLEBAR                    = TEXT-001   " ##
+      text_question               = pv_text
+     TEXT_BUTTON_1               = TEXT-002   " Yes
+     TEXT_BUTTON_2               = TEXT-003   " No
+<font color ="#0000FF">*     DEFAULT_BUTTON              = '1'</font>
+     DISPLAY_CANCEL_BUTTON       = ''
+<font color ="#0000FF">*     USERDEFINED_F1_HELP         = ' '</font>
+<font color ="#0000FF">*     START_COLUMN                = 25</font>
+<font color ="#0000FF">*     START_ROW                   = 6</font>
+<font color ="#0000FF">*     POPUP_TYPE                  =</font>
+<font color ="#0000FF">*     IV_QUICKINFO_BUTTON_1       = ' '</font>
+<font color ="#0000FF">*     IV_QUICKINFO_BUTTON_2       = ' '</font>
+   IMPORTING
+     ANSWER                      = pv_answer
+<font color ="#0000FF">*   TABLES</font>
+<font color ="#0000FF">*     PARAMETER                   =</font>
+   EXCEPTIONS
+     TEXT_NOT_FOUND              = 1
+     OTHERS                      = 2
+            .
+  IF sy-subrc &lt;&gt; 0.
+    MESSAGE a045(zmcassmm04).     "### ## ##
+  ENDIF.
+ENDFORM.
+</pre>
+<hr>
+<font size="2" face = "Sans Serif">Extracted by Direct Download Enterprise version 1.3.1 - E.G.Mellodew. 1998-2005 UK. Sap Release 754
+</font>
+</body>
+</html>

@@ -1,0 +1,51 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<html>
+<head>
+<title>MZASSMM040_C01</title>
+</head>
+<body bgcolor="#FFFFE0">
+<font size="3" face = "Arial" color="#000000"><b>Code listing for: MZASSMM040_C01</b></font>
+<br>
+<font size="3" face = "Arial" color="#000000"><b>Description:  Include MZASSMM040_C01</b></font>
+<hr>
+<pre width="100">
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& Include          MZASSMM040_C01</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+CLASS lcl_handler IMPLEMENTATION.
+  METHOD on_double_click.
+    CLEAR: gs_list2.
+    " ## ### # ##
+    READ TABLE gt_list2 INDEX e_row INTO gs_list2.
+    CASE e_column.
+      WHEN 'FDNAME' OR 'FDID'.
+        PERFORM get_food_detail USING gs_list2 CHANGING zsassmm0405 gt_domain gs_domain.
+      WHEN 'LONAME'.
+        PERFORM get_location_detail USING gs_list2 CHANGING zsassmm0406.
+      WHEN 'PNAME'.
+        PERFORM get_plant_detail USING gs_list2 CHANGING zsassmm0407.
+      WHEN 'WNAME' OR 'WAHID'.
+        PERFORM get_warehouse_detail USING gs_list2 CHANGING zsassmm0408 gt_domain gs_domain.
+    ENDCASE.
+  ENDMETHOD.
+ENDCLASS.
+CLASS lcl_event_receiver IMPLEMENTATION.
+  METHOD toolbar_button.
+    PERFORM handle_toolbar_button USING e_object.
+  ENDMETHOD.
+  METHOD toolbar_button_02.
+    PERFORM handle_toolbar_button_02 USING e_object.
+  ENDMETHOD.
+  METHOD handle_user_command.
+    PERFORM handle_user_command USING e_ucomm.
+  ENDMETHOD.
+  METHOD button_click.
+    PERFORM handle_button_click USING es_col_id es_row_no gt_list gt_domain.
+  ENDMETHOD.
+ENDCLASS.
+</pre>
+<hr>
+<font size="2" face = "Sans Serif">Extracted by Direct Download Enterprise version 1.3.1 - E.G.Mellodew. 1998-2005 UK. Sap Release 754
+</font>
+</body>
+</html>

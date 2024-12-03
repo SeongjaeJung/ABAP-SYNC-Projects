@@ -1,0 +1,198 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<html>
+<head>
+<title>MZASSMM040_O01</title>
+</head>
+<body bgcolor="#FFFFE0">
+<font size="3" face = "Arial" color="#000000"><b>Code listing for: MZASSMM040_O01</b></font>
+<br>
+<font size="3" face = "Arial" color="#000000"><b>Description:  Include MZASSMM040_O01</b></font>
+<hr>
+<pre width="100">
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& Include          MZASSMM040_O01</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& Module STATUS_0100 OUTPUT</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*&</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+MODULE status_0100 OUTPUT.
+  SET PF-STATUS 'S100'.
+  SET TITLEBAR 'T100'.
+ENDMODULE.
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& Module CREATE_ALV OUTPUT</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*&</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+MODULE create_alv OUTPUT.
+  IF go_con IS INITIAL.
+    PERFORM set_alv USING go_con 'CON1' go_alv.
+    CREATE OBJECT go_receiver.
+    SET HANDLER go_receiver-&gt;toolbar_button FOR go_alv.
+    SET HANDLER go_receiver-&gt;handle_user_command FOR go_alv.
+    SET HANDLER go_receiver-&gt;button_click FOR go_alv.
+    PERFORM display_alv_01.
+  ELSE.
+    PERFORM display_alv_01.
+<font color ="#0000FF">*    PERFORM refresh_alv_01.</font>
+  ENDIF.
+  IF go_con2 IS INITIAL.
+    PERFORM set_alv USING go_con2 'CON2' go_alv2.
+    CREATE OBJECT go_handler.
+    SET HANDLER go_handler-&gt;on_double_click FOR go_alv2.
+  ENDIF.
+  PERFORM display_alv_02.
+ENDMODULE.
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& Module STATUS_0120 OUTPUT</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*&</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+MODULE status_0120 OUTPUT.
+  SET PF-STATUS 'S120'.
+  SET TITLEBAR 'T120'.
+ENDMODULE.
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& Module STATUS_0110 OUTPUT</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*&</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+MODULE status_0110 OUTPUT.
+  SET PF-STATUS 'S110'.
+  SET TITLEBAR 'T110'.
+ENDMODULE.
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& Module STATUS_0200 OUTPUT</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*&</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+MODULE status_0200 OUTPUT.
+  SET PF-STATUS 'S200'.
+  SET TITLEBAR 'T200'.
+ENDMODULE.
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& Module CREATE_ALV_0200 OUTPUT</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*&</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+MODULE create_alv_0200 OUTPUT.
+  PERFORM display_alv_02 .
+ENDMODULE.
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& Module STATUS_0300 OUTPUT</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*&</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+MODULE status_0300 OUTPUT.
+  SET PF-STATUS 'S300'.
+  SET TITLEBAR 'T300'.
+ENDMODULE.
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& Module CREATE_ALV_03 OUTPUT</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*&</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+MODULE create_alv_03 OUTPUT.
+  IF go_con3 IS INITIAL.
+    PERFORM set_alv USING go_con3 'CON3' go_alv3.
+  ENDIF.
+  SET HANDLER go_receiver-&gt;toolbar_button_02 FOR go_alv3.
+  SET HANDLER go_receiver-&gt;handle_user_command FOR go_alv3.
+  PERFORM display_alv_03.
+ENDMODULE.
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& Module STATUS_0210 OUTPUT</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*&</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+MODULE status_0210 OUTPUT.
+  SET PF-STATUS 'S220'.
+  SET TITLEBAR 'T210'.
+ENDMODULE.
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& Module STATUS_0211 OUTPUT</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*&</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+MODULE status_0211 OUTPUT.
+  SET PF-STATUS 'S210'.
+  SET TITLEBAR 'T211'.
+ENDMODULE.
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& Module MODIFY_SCREEN_0300 OUTPUT</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*&</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+MODULE modify_screen_0300 OUTPUT.
+  IF zsassmm0402-rstat = 'Y'.
+    LOOP AT SCREEN.
+      CASE screen-name.
+        WHEN 'ZSASSMM0402-BPID'.
+          screen-input = '0'.
+        WHEN 'ZSASSMM0402-HTEXT'.
+          screen-input = '0'.
+      ENDCASE.
+      MODIFY SCREEN.
+    ENDLOOP.
+  ENDIF.
+ENDMODULE.
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& Module STATUS_0400 OUTPUT</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*&</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+MODULE status_0400 OUTPUT.
+  SET PF-STATUS 'S400'.
+  SET TITLEBAR 'T400'.
+ENDMODULE.
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& Module STATUS_0500 OUTPUT</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*&</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+MODULE status_0500 OUTPUT.
+  SET PF-STATUS 'S500'.
+  SET TITLEBAR 'T500'.
+ENDMODULE.
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*&      Module  USER_COMMAND_0160  INPUT</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*       text</font>
+<font color ="#0000FF">*----------------------------------------------------------------------*</font>
+MODULE user_command_0160 INPUT.
+  CASE ok_code.
+    WHEN 'CANCEL'.
+      LEAVE TO SCREEN 0.
+  ENDCASE.
+ENDMODULE.
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& Module MODIFY_SCREEN OUTPUT</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*&</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+MODULE modify_screen OUTPUT.
+  IF sy-tcode &lt;&gt; 'ZASSMM040_C_BDC'.
+    LOOP AT SCREEN.
+      CASE screen-name.
+        WHEN 'PLAID'.
+          screen-invisible = 1.
+          screen-input = 0.
+        WHEN 'PLANO'.
+          screen-invisible = 1.
+          screen-input = 0.
+        WHEN 'B_CREATE'.
+          screen-invisible = 1.
+          screen-input = 0.
+      ENDCASE.
+      MODIFY SCREEN.
+    ENDLOOP.
+  ENDIF.
+ENDMODULE.
+</pre>
+<hr>
+<font size="2" face = "Sans Serif">Extracted by Direct Download Enterprise version 1.3.1 - E.G.Mellodew. 1998-2005 UK. Sap Release 754
+</font>
+</body>
+</html>

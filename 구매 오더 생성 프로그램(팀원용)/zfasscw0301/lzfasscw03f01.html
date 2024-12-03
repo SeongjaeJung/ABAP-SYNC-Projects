@@ -1,0 +1,62 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<html>
+<head>
+<title>LZFASSCW03F01</title>
+</head>
+<body bgcolor="#FFFFE0">
+<font size="3" face = "Arial" color="#000000"><b>Code listing for: LZFASSCW03F01</b></font>
+<br>
+<font size="3" face = "Arial" color="#000000"><b>Description:  Include LZFASSCW03F01</b></font>
+<hr>
+<pre width="100">
+<font color ="#0000FF">*----------------------------------------------------------------------*</font>
+<font color ="#0000FF">***INCLUDE LZFASSCW03F01.</font>
+<font color ="#0000FF">*----------------------------------------------------------------------*</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& Form get_vendor_name</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& text</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*&      --&gt; IV_ID</font>
+<font color ="#0000FF">*&      &lt;-- EV_NAME</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+FORM get_vendor_name  USING    VALUE(pv_id)
+                      CHANGING pv_name
+                               pt_bpname TYPE zsasscw0301_t
+                               ps_bpname TYPE zsasscw0301.
+  CLEAR pv_name.
+
+  READ TABLE pt_bpname WITH KEY bpid = pv_id INTO ps_bpname.
+  IF sy-subrc &lt;&gt; 0.
+
+    PERFORM get_bpname CHANGING pt_bpname.
+    READ TABLE pt_bpname WITH KEY bpid = pv_id INTO ps_bpname.
+    IF sy-subrc = 0.
+      pv_name = ps_bpname-bpname.
+    ENDIF.
+
+  ELSE.
+    pv_name = ps_bpname-bpname.
+  ENDIF.
+
+ENDFORM.
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& Form get_bpname</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& text</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*&      --&gt; PV_ID</font>
+<font color ="#0000FF">*&      &lt;-- PS_BPNAME_BPNAME</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+FORM get_bpname  CHANGING pt_bpname TYPE zsasscw0301_t.
+  SELECT bpid bpname
+      FROM ztassfi0001_t
+      INTO CORRESPONDING FIELDS OF TABLE pt_bpname
+     WHERE spras = sy-langu.
+ENDFORM.
+</pre>
+<hr>
+<font size="2" face = "Sans Serif">Extracted by Direct Download Enterprise version 1.3.1 - E.G.Mellodew. 1998-2005 UK. Sap Release 754
+</font>
+</body>
+</html>
