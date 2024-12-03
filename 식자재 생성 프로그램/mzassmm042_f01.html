@@ -1,0 +1,212 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<html>
+<head>
+<title>MZASSMM042_F01</title>
+</head>
+<body bgcolor="#FFFFE0">
+<font size="3" face = "Arial" color="#000000"><b>Code listing for: MZASSMM042_F01</b></font>
+<br>
+<font size="3" face = "Arial" color="#000000"><b>Description:  Include MZASSMM042_F01</b></font>
+<hr>
+<pre width="100">
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& Include          MZASSMM042_F01</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*&      Module  USER_COMMAND_0100  INPUT</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*       text</font>
+<font color ="#0000FF">*----------------------------------------------------------------------*</font>
+MODULE user_command_0100 INPUT.
+  CASE ok_code.
+    WHEN 'BACK'.
+      LEAVE TO SCREEN 0.
+    WHEN 'ENTER'.
+      PERFORM get_enter_info CHANGING zsassmm0423.
+    WHEN 'CREATE'.
+      PERFORM get_enter_info CHANGING zsassmm0423.
+      "### ## ### ##
+      PERFORM check_input_data USING zsassmm0423
+                               CHANGING gv_subrc.
+      IF gv_subrc &lt;&gt; 0.
+        CLEAR gv_subrc.
+        RETURN.
+      ENDIF.
+      PERFORM create_food_data USING zsassmm0423.
+
+      zsassmm0423-waers = 'KRW'.
+      zsassmm0423-wunit = 'KG'.
+  ENDCASE.
+ENDMODULE.
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& Form get_enter_info</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& text</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*&      &lt;-- ZSASSMM0423</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+FORM get_enter_info  CHANGING ps_food TYPE zsassmm0423.
+  " ## ## ###
+  PERFORM get_domain_text USING ps_food-fcatg
+                                'ZDASS_FCATG'
+                          CHANGING ps_food-fcatgt.
+  " #####
+  PERFORM get_domain_text USING ps_food-stway
+                                'ZDASS_STWAY'
+                         CHANGING ps_food-stwayt.
+  "####
+  PERFORM get_food_emp_name USING ps_food-fdemp
+                            CHANGING ps_food-fdempt.
+ENDFORM.
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& Form get_domain_cat_text</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& text</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*&      --&gt; PS_FOOD_FCATG</font>
+<font color ="#0000FF">*&      &lt;-- PS_FOOD_FCATGT</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+FORM get_domain_text  USING    VALUE(pv_fcatg)
+                               VALUE(pv_domname)
+                      CHANGING pv_fcatgt.
+  call function <a href ="zfasscw1401/zfasscw1401.html">'ZFASSCW1401'</a>
+    EXPORTING
+      iv_domname  = pv_domname
+      iv_domvalue = pv_fcatg
+    IMPORTING
+      ev_ddtext   = pv_fcatgt.
+
+ENDFORM.
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& Form get_food_emp_name</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& text</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*&      --&gt; PS_FOOD_FDEMP</font>
+<font color ="#0000FF">*&      &lt;-- PS_FOOD_FDEMPT</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+FORM get_food_emp_name  USING    VALUE(pv_fdemp)
+                        CHANGING pv_fdempt.
+  DATA: lv_lname TYPE ztassfi0002-lname,
+        lv_fname TYPE ztassfi0002-fname.
+
+  SELECT SINGLE lname fname
+    FROM ztassfi0002
+    INTO (lv_lname, lv_fname)
+   WHERE empid = pv_fdemp.
+
+  CONCATENATE lv_lname lv_fname INTO pv_fdempt.
+ENDFORM.
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& Form create_food_data</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& text</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*&      --&gt; ZSASSMM0423</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+FORM create_food_data  USING    VALUE(ps_food) TYPE zsassmm0423.
+  DATA: ls_insert   TYPE ztassmm0301,
+        ls_insert_t TYPE ztassmm0301_t.
+  " ##### ##
+  PERFORM get_foodid USING ps_food-fcatg
+                     CHANGING ps_food-fdid.
+
+  MOVE-CORRESPONDING ps_food TO ls_insert.
+  INSERT ztassmm0301 FROM ls_insert.
+  IF sy-subrc &lt;&gt; 0.
+    MESSAGE a065(zmcassmm04) WITH TEXT-c03.     "### ## ##
+    ROLLBACK WORK.
+  ELSE.
+    MOVE-CORRESPONDING ps_food TO ls_insert_t.
+    ls_insert_t-spras = sy-langu.
+    INSERT ztassmm0301_t FROM ls_insert_t.
+    IF sy-subrc &lt;&gt; 0.
+      MESSAGE a065(zmcassmm04) WITH TEXT-c03.     "### ## ##
+      ROLLBACK WORK.
+    ELSE.
+      MESSAGE s065(zmcassmm04) WITH '### ## ##'.
+      COMMIT WORK.
+    ENDIF.
+  ENDIF.
+  CLEAR zsassmm0423.
+ENDFORM.
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& Form check_input_data</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& text</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*&      --&gt; ZSASSMM0423</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+FORM check_input_data  USING    VALUE(ps_food) TYPE zsassmm0423
+                       CHANGING pv_subrc.
+  CLEAR gv_subrc.
+  IF   ps_food-fcatg IS INITIAL OR ps_food-wunit IS INITIAL
+    OR ps_food-stway IS INITIAL OR ps_food-stper IS INITIAL
+    OR ps_food-calory IS INITIAL OR ps_food-fpric IS INITIAL
+    OR ps_food-waers IS INITIAL OR ps_food-rgdat IS INITIAL
+    OR ps_food-fdemp IS INITIAL.
+    MESSAGE i065(zmcassmm04) WITH TEXT-c01.     "### ### ## ######.
+    pv_subrc = sy-subrc.
+    RETURN.
+  ENDIF.
+
+  IF ps_food-fcatgt IS INITIAL OR ps_food-stwayt IS INITIAL
+    OR ps_food-fdempt IS INITIAL.
+    MESSAGE i065(zmcassmm04) WITH TEXT-c02.   "######, ####, ###### ## ######.
+    pv_subrc = 4.
+    RETURN.
+  ENDIF.
+
+  IF ps_food-wunit &lt;&gt; 'KG' AND ps_food-wunit &lt;&gt; 'L'.
+    pv_subrc = 4.
+    RETURN.
+  ENDIF.
+
+  SELECT SINGLE fdname
+    FROM ztassmm0301_t
+    INTO @DATA(lv_name)
+   WHERE fdname = @ps_food-fdname
+     AND spras = @sy-langu.
+
+  IF sy-subrc = 0.
+    MESSAGE i065(zmcassmm04) WITH '## ### #######.'.
+    pv_subrc = 4.
+    RETURN.
+  ENDIF.
+ENDFORM.
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& Form set_default_value</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& text</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& --&gt;  p1        text</font>
+<font color ="#0000FF">*& &lt;--  p2        text</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+FORM set_default_value .
+  zsassmm0423-rgdat = sy-datum.
+  zsassmm0423-waers = 'KRW'.
+  zsassmm0423-wunit = 'KG'.
+ENDFORM.
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& Form get_foodid</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& text</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& --&gt;  p1        text</font>
+<font color ="#0000FF">*& &lt;--  p2        text</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+FORM get_foodid USING VALUE(pv_fcatg)
+                CHANGING pv_fdid.
+  call function <a href ="zfassmm1201/zfassmm1201.html">'ZFASSMM1201'</a>
+    EXPORTING
+      iv_fcatg = pv_fcatg
+    IMPORTING
+      ev_fdid  = pv_fdid.
+
+ENDFORM.
+</pre>
+<hr>
+<font size="2" face = "Sans Serif">Extracted by Direct Download Enterprise version 1.3.1 - E.G.Mellodew. 1998-2005 UK. Sap Release 754
+</font>
+</body>
+</html>
