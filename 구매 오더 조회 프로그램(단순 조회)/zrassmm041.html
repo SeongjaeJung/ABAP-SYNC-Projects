@@ -1,0 +1,52 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<html>
+<head>
+<title>ZRASSMM041</title>
+</head>
+<body bgcolor="#FFFFE0">
+<font size="3" face = "Arial" color="#000000"><b>Code listing for: ZRASSMM041</b></font>
+<br>
+<font size="3" face = "Arial" color="#000000"><b>Description:  [ASS] #### #### ####</b></font>
+<hr>
+<pre width="100">
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& Report ZRASSMM041</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*&</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+
+include <a href ="zrassmm041_top.html">zrassmm041_top</a>.    " Global Data
+
+include <a href ="zrassmm041_o01.html">zrassmm041_o01</a>.  " PBO-Modules
+include <a href ="zrassmm041_i01.html">zrassmm041_i01</a>.  " PAI-Modules
+include <a href ="zrassmm041_f01.html">zrassmm041_f01</a>.  " FORM-Routines
+include <a href ="zrassmm041_c01.html">zrassmm041_c01</a>.  " Event
+
+INITIALIZATION.
+  PERFORM set_default_value .
+
+AT SELECTION-SCREEN OUTPUT.
+
+AT SELECTION-SCREEN.
+
+START-OF-SELECTION.
+  PERFORM set_htext.
+  PERFORM get_alv_01_data.
+  IF gv_subrc = 0.
+    CALL SCREEN 0100.
+  ENDIF.
+
+<font color ="#0000FF">*GUI Texts</font>
+<font color ="#0000FF">*----------------------------------------------------------</font>
+<font color ="#0000FF">* T100 --&gt; [ASS] #### ##</font>
+
+<font color ="#0000FF">*Text elements</font>
+<font color ="#0000FF">*----------------------------------------------------------</font>
+<font color ="#0000FF">* T01 ## ##</font>
+<font color ="#0000FF">* T02 ## ##</font>
+</pre>
+<hr>
+<font size="2" face = "Sans Serif">Extracted by Direct Download Enterprise version 1.3.1 - E.G.Mellodew. 1998-2005 UK. Sap Release 754
+</font>
+</body>
+</html>

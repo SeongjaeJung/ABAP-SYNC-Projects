@@ -1,0 +1,70 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<html>
+<head>
+<title>ZRASSMM041_TOP</title>
+</head>
+<body bgcolor="#FFFFE0">
+<font size="3" face = "Arial" color="#000000"><b>Code listing for: ZRASSMM041_TOP</b></font>
+<br>
+<font size="3" face = "Arial" color="#000000"><b>Description:  Include ZRASSMM041_TOP</b></font>
+<hr>
+<pre width="100">
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& Include ZRASSMM041_TOP                           - Report ZRASSMM041</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+REPORT zrassmm041.
+
+DATA: ok_code  TYPE sy-ucomm,
+      gv_subrc TYPE sy-subrc.
+
+DATA: gs_list TYPE zsassmm0402,
+      gt_list LIKE TABLE OF gs_list.
+
+DATA: gs_item TYPE zsassmm0403,
+      gt_item LIKE TABLE OF gs_item.
+
+DATA: go_dock  TYPE REF TO cl_gui_docking_container,
+      go_alv   TYPE REF TO cl_gui_alv_grid,
+      go_con   TYPE REF TO cl_gui_container,
+      go_con2  TYPE REF TO cl_gui_container,
+      go_alv2  TYPE REF TO cl_gui_alv_grid,
+      go_split TYPE REF TO cl_gui_splitter_container.
+
+DATA: gs_layo  TYPE lvc_s_layo,
+      gt_sort  TYPE lvc_t_sort,
+      gs_sort  TYPE lvc_s_sort,
+      gt_fcat  TYPE lvc_t_fcat,
+      gs_fcat  LIKE LINE OF gt_fcat,
+      gt_sort2 LIKE gt_sort,
+      gs_sort2 LIKE LINE OF gt_sort2,
+      gt_fcat2 LIKE gt_fcat,
+      gs_fcat2 LIKE LINE OF gt_fcat.
+
+
+SELECTION-SCREEN BEGIN OF BLOCK b01 WITH FRAME TITLE TEXT-t01.
+  SELECT-OPTIONS: so_bpid FOR gs_list-bpid,
+                  so_picid FOR gs_list-picid,
+                  so_ordat FOR gs_list-ordat.
+SELECTION-SCREEN END OF BLOCK b01.
+SELECTION-SCREEN BEGIN OF BLOCK b02 WITH FRAME TITLE TEXT-t02.
+  SELECT-OPTIONS: so_ordid FOR gs_list-ordid,
+                  so_htext FOR gs_list-htext NO INTERVALS NO-EXTENSION,
+                  so_appno FOR gs_list-appno,
+                  so_chdat FOR gs_list-chdat,
+                  so_cdat FOR gs_list-cdat,
+                  so_opsum FOR gs_list-opsum.
+  PARAMETERS      pa_waers LIKE gs_list-waers.
+SELECTION-SCREEN END OF BLOCK b02.
+
+CLASS lcl_handler DEFINITION.
+  PUBLIC SECTION.
+    METHODS on_double_click FOR EVENT double_click OF cl_gui_alv_grid
+      IMPORTING e_row.
+ENDCLASS.
+DATA go_handler TYPE REF TO lcl_handler.
+</pre>
+<hr>
+<font size="2" face = "Sans Serif">Extracted by Direct Download Enterprise version 1.3.1 - E.G.Mellodew. 1998-2005 UK. Sap Release 754
+</font>
+</body>
+</html>
