@@ -1,0 +1,135 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<html>
+<head>
+<title>LZFGASSMM04F01</title>
+</head>
+<body bgcolor="#FFFFE0">
+<font size="3" face = "Arial" color="#000000"><b>Code listing for: LZFGASSMM04F01</b></font>
+<br>
+<font size="3" face = "Arial" color="#000000"><b>Description:  Include LZFGASSMM04F01</b></font>
+<hr>
+<pre width="100">
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& Form get_order_number</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& text</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*&      &lt;-- GV_DATE</font>
+<font color ="#0000FF">*&      &lt;-- GV_HEAD</font>
+<font color ="#0000FF">*&      &lt;-- GV_YEAR</font>
+<font color ="#0000FF">*&      &lt;-- EV_ORDNO</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+FORM get_order_number  CHANGING pv_date
+                                pv_head
+                                pv_year
+                                pv_ordno.
+  CLEAR pv_ordno.
+
+  CALL FUNCTION 'NUMBER_GET_NEXT'
+    EXPORTING
+      nr_range_nr             = '01'
+      object                  = 'ZASS_ORDNO'
+<font color ="#0000FF">*     QUANTITY                = '1'</font>
+<font color ="#0000FF">*     SUBOBJECT               = ' '</font>
+<font color ="#0000FF">*     TOYEAR                  = '0000'</font>
+<font color ="#0000FF">*     IGNORE_BUFFER           = ' '</font>
+    IMPORTING
+      number                  = pv_date
+<font color ="#0000FF">*     QUANTITY                =</font>
+<font color ="#0000FF">*     RETURNCODE              =</font>
+    EXCEPTIONS
+      interval_not_found      = 1
+      number_range_not_intern = 2
+      object_not_found        = 3
+      quantity_is_0           = 4
+      quantity_is_not_1       = 5
+      interval_overflow       = 6
+      buffer_overflow         = 7
+      OTHERS                  = 8.
+  IF sy-subrc &lt;&gt; 0.
+    MESSAGE a046(zmcassmm04).         "#### ## ##
+  ENDIF.
+
+  pv_head = 'PO'.
+  pv_year = sy-datum(4).
+  CONCATENATE pv_head pv_year pv_date INTO pv_ordno.
+ENDFORM.
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& Form selected_row_data</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& text</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*&      --&gt; I_ALV</font>
+<font color ="#0000FF">*&      &lt;-- ET_ROWS</font>
+<font color ="#0000FF">*&      &lt;-- EV_SUBRC</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+FORM selected_row_data  USING    p_alv TYPE REF TO cl_gui_alv_grid
+                        CHANGING pt_rows TYPE lvc_t_row
+                                 pv_subrc.
+  DATA lv_rows TYPE i.
+  CLEAR: lv_rows, pv_subrc, pt_rows.
+  CALL METHOD p_alv-&gt;get_selected_rows
+    IMPORTING
+      et_index_rows = pt_rows.
+
+  DESCRIBE TABLE pt_rows LINES lv_rows.
+  IF lv_rows = 0.
+    MESSAGE i004(zmcassmm04).         "#### ######
+    pv_subrc = 0.
+  ELSEIF lv_rows = 1.
+    pv_subrc = 2.
+  ELSE.
+    MESSAGE i005(zmcassmm04).         "### #### ######
+    pv_subrc = 4.
+  ENDIF.
+ENDFORM.
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& Form get_domain_value</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& text</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*&      --&gt; IV_DOMAIN</font>
+<font color ="#0000FF">*&      &lt;-- ET_DOMAIN</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+FORM get_domain_value  USING    VALUE(pv_domain)
+                       CHANGING pt_domain TYPE dd07v_t.
+  CLEAR pt_domain.
+
+  CALL FUNCTION 'GET_DOMAIN_VALUES'
+    EXPORTING
+      domname         = pv_domain
+<font color ="#0000FF">*     TEXT            = 'X'</font>
+<font color ="#0000FF">*     FILL_DD07L_TAB  = ' '</font>
+    TABLES
+      values_tab      = pt_domain
+<font color ="#0000FF">*     VALUES_DD07L    =</font>
+    EXCEPTIONS
+      no_values_found = 1
+      OTHERS          = 2.
+  IF sy-subrc &lt;&gt; 0.
+    MESSAGE a017(zmcassmm04).         "Fixed Value ## ##
+  ENDIF.
+
+ENDFORM.
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& Form select_appno</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& text</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*&      --&gt; PV_ORDID</font>
+<font color ="#0000FF">*&      &lt;-- PV_APPNO</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+FORM select_appno  USING    VALUE(pv_ordid)
+                   CHANGING pv_appno
+                            pv_appsta.
+  SELECT SINGLE appno appsta
+    FROM ztassfi0201
+    INTO (pv_appno, pv_appsta)
+   WHERE codoc = pv_ordid.
+ENDFORM.
+</pre>
+<hr>
+<font size="2" face = "Sans Serif">Extracted by Direct Download Enterprise version 1.3.1 - E.G.Mellodew. 1998-2005 UK. Sap Release 754
+</font>
+</body>
+</html>

@@ -1,0 +1,123 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<html>
+<head>
+<title>ZRASSMM040_TOP</title>
+</head>
+<body bgcolor="#FFFFE0">
+<font size="3" face = "Arial" color="#000000"><b>Code listing for: ZRASSMM040_TOP</b></font>
+<br>
+<font size="3" face = "Arial" color="#000000"><b>Description:  Include ZRASSMM040_TOP</b></font>
+<hr>
+<pre width="100">
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& Include ZRASSMM040_TOP                           - Report ZRASSMM040</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+REPORT zrassmm040.
+
+DATA: ok_code  TYPE sy-ucomm,
+      ok_code2 TYPE sy-ucomm,
+      gv_subrc TYPE sy-subrc,
+      gv_tabix TYPE sy-tabix.
+
+" select-option
+DATA: gt_data TYPE zsassmm0402_t,
+      gs_data TYPE zsassmm0402.
+
+" ## ##
+TABLES zsassmm0413.
+
+" #### ####
+TABLES zsassmm0404.
+
+" ALV
+DATA: gt_list TYPE zsassmm0402_t,
+      gs_list TYPE zsassmm0402.
+
+" ## ALV
+DATA: gt_sum TYPE zsassmm0415_t,
+      gs_sum TYPE zsassmm0415.
+
+" ### ALV
+DATA: gt_list2 TYPE zsassmm0403_t,
+      gs_list2 TYPE zsassmm0403.
+
+" ## ## ## ##
+DATA: gs_column TYPE lvc_s_col,
+      gv_row    TYPE lvc_s_row.
+
+" Domain ##
+DATA: gt_domain TYPE dd07v_t,
+      gs_domain TYPE dd07v.
+
+" #### radio button
+DATA: gt_canc TYPE RANGE OF zsassmm0402-canc,
+      gs_canc LIKE LINE OF gt_canc.
+
+" Tabstrip
+CONTROLS tab TYPE TABSTRIP.
+
+" ALV ## ##
+DATA: go_dock  TYPE REF TO cl_gui_docking_container,
+      go_dock2 TYPE REF TO cl_gui_docking_container,
+      go_split TYPE REF TO cl_gui_splitter_container,
+      go_alv   TYPE REF TO cl_gui_alv_grid,
+      go_alv2  TYPE REF TO cl_gui_alv_grid,
+      go_alv3  TYPE REF TO cl_gui_alv_grid,
+      go_con1  TYPE REF TO cl_gui_container,
+      go_con2  TYPE REF TO cl_gui_container,
+      go_con3  TYPE REF TO cl_gui_custom_container.
+
+" ## ##
+DATA: gv_move TYPE c LENGTH 2,
+      gv_flag TYPE c LENGTH 1.
+
+"ALV ## ##2
+DATA: gt_fcat  TYPE lvc_t_fcat,
+      gs_fcat  LIKE LINE OF gt_fcat,
+      gt_sort  TYPE lvc_t_sort,
+      gs_sort  LIKE LINE OF gt_sort,
+      gs_layo  TYPE lvc_s_layo,
+      gt_fcat2 TYPE lvc_t_fcat,
+      gs_fcat2 LIKE LINE OF gt_fcat,
+      gt_sort2 TYPE lvc_t_sort,
+      gs_sort2 LIKE LINE OF gt_sort,
+      gs_layo2 TYPE lvc_s_layo,
+      gs_layo3 TYPE lvc_s_layo,
+      gt_fcat3 TYPE lvc_t_fcat,
+      gs_fcat3 LIKE LINE OF gt_fcat3,
+      gt_sort3 TYPE lvc_t_sort,
+      gs_sort3 LIKE LINE OF gt_sort3.
+
+" ## ## #### ###
+DATA: BEGIN OF gs_temp,
+        bpid  TYPE zsassmm0402-bpid,
+        picid TYPE zsassmm0402-picid,
+        rstat TYPE zsassmm0402-rstat,
+      END OF gs_temp,
+      gt_temp LIKE TABLE OF gs_temp.
+
+" ### # ####
+DATA: gt_rows TYPE lvc_t_row,
+      gs_rows TYPE lvc_s_row.
+
+" ### ##
+DATA gv_answer TYPE c.
+
+"## ##
+include <a href ="zrassmm040_s01.html">zrassmm040_s01</a>.  " Selection Screen
+
+" ###
+CLASS lcl_hotspot DEFINITION.
+  PUBLIC SECTION.
+    METHODS hotspot_click FOR EVENT hotspot_click OF cl_gui_alv_grid
+      IMPORTING
+        e_row_id
+        e_column_id.
+ENDCLASS.
+DATA: go_hotspot TYPE REF TO lcl_hotspot.
+</pre>
+<hr>
+<font size="2" face = "Sans Serif">Extracted by Direct Download Enterprise version 1.3.1 - E.G.Mellodew. 1998-2005 UK. Sap Release 754
+</font>
+</body>
+</html>

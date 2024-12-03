@@ -1,0 +1,54 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<html>
+<head>
+<title>ZRASSMM040_S01</title>
+</head>
+<body bgcolor="#FFFFE0">
+<font size="3" face = "Arial" color="#000000"><b>Code listing for: ZRASSMM040_S01</b></font>
+<br>
+<font size="3" face = "Arial" color="#000000"><b>Description:  Include ZRASSMM040_S01</b></font>
+<hr>
+<pre width="100">
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+<font color ="#0000FF">*& Include          ZRASSMM040_S01</font>
+<font color ="#0000FF">*&---------------------------------------------------------------------*</font>
+
+SELECTION-SCREEN BEGIN OF BLOCK b01 WITH FRAME TITLE TEXT-c01.      "## ##
+  SELECT-OPTIONS: so_bpid  FOR gs_data-bpid.            " Select-options# ##### ## ##
+  SELECT-OPTIONS: so_picid FOR gs_data-picid.
+  SELECT-OPTIONS: so_ordat FOR gs_data-ordat.
+<font color ="#0000FF">*  SELECTION-SCREEN POSITION 30.</font>
+<font color ="#0000FF">*  SELECTION-SCREEN COMMENT 39(10) txt_bpl.</font>
+<font color ="#0000FF">*  SELECTION-SCREEN COMMENT 65(10) txt_bph.</font>
+<font color ="#0000FF">*  SELECT-OPTIONS: so_bname FOR gs_data-bpname NO INTERVALS NO-EXTENSION.</font>
+  SELECTION-SCREEN BEGIN OF LINE.
+  SELECTION-SCREEN POSITION 10.
+  PARAMETERS: pa_canc1 RADIOBUTTON GROUP rad1  DEFAULT 'X'.
+  SELECTION-SCREEN COMMENT (10) TEXT-c03 FOR FIELD pa_canc1.      " ## ##
+  SELECTION-SCREEN POSITION 30.
+  PARAMETERS: pa_canc2 RADIOBUTTON GROUP rad1.
+  SELECTION-SCREEN COMMENT (10) TEXT-c04 FOR FIELD pa_canc2.      " ## ##
+  SELECTION-SCREEN POSITION 50.
+  PARAMETERS: pa_canc3 RADIOBUTTON GROUP rad1.
+  SELECTION-SCREEN COMMENT (10) TEXT-c05 FOR FIELD pa_canc3.      " ### ##
+  SELECTION-SCREEN END OF LINE.
+SELECTION-SCREEN END OF BLOCK b01.
+
+SELECTION-SCREEN BEGIN OF BLOCK b02 WITH FRAME TITLE TEXT-c02.      "## ##
+  SELECT-OPTIONS: so_ordid FOR gs_data-ordid.
+  SELECT-OPTIONS: so_htext FOR gs_data-htext NO INTERVALS NO-EXTENSION.
+<font color ="#0000FF">*  SELECT-OPTIONS: so_rstat FOR gs_data-rstat.</font>
+  SELECT-OPTIONS: so_appno FOR gs_data-appno.
+  SELECT-OPTIONS: so_chdat FOR gs_data-chdat.
+  SELECT-OPTIONS: so_cdat  FOR gs_data-cdat.
+  SELECT-OPTIONS: so_opsum FOR gs_data-opsum.
+  SELECT-OPTIONS: so_waers FOR gs_data-waers NO INTERVALS NO-EXTENSION.
+<font color ="#0000FF">*  SELECTION-SCREEN COMMENT 48(20) txt_name.</font>
+<font color ="#0000FF">*  SELECT-OPTIONS: so_sname FOR gs_data-sname NO INTERVALS NO-EXTENSION.</font>
+SELECTION-SCREEN END OF BLOCK b02.
+</pre>
+<hr>
+<font size="2" face = "Sans Serif">Extracted by Direct Download Enterprise version 1.3.1 - E.G.Mellodew. 1998-2005 UK. Sap Release 754
+</font>
+</body>
+</html>
